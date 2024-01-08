@@ -1,4 +1,4 @@
-import { fizzbuzz } from "./index.js";
+import { fizzbuzz } from "./index.ts";
 
 describe("FizzBuzz", () => {
   it("1から100までのFizzBuzzの結果を返すこと", () => {

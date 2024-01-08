@@ -1,0 +1,1 @@
+export const fizzbuzz = (): string => {  let num = "";  for(let i = 1; i <= 100; i++){num += (i % 15 === 0 ? "FizzBuzz":(i% 3 === 0 ?"Fizz":(i% 5 === 0 ?"Buzz":i)))+"\n"} return num; };

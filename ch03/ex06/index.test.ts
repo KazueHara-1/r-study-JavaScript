@@ -1,18 +1,30 @@
-import { padStart, slice, substring, trim } from "./index.js"; // typescript で書く場合は "./index.ts"
+import { padStart, slice, substring, trim } from "./index.ts"; // typescript で書く場合は "./index.ts"
 
-function substringTestCase(str, indexStart, indexEnd) {
+function substringTestCase(
+  str: string,
+  indexStart: number,
+  indexEnd?: number
+): [string, number, number | undefined, string] {
   return [str, indexStart, indexEnd, str.substring(indexStart, indexEnd)];
 }
 
-function sliceTestCase(str, indexStart, indexEnd) {
+function sliceTestCase(
+  str: string,
+  indexStart?: number,
+  indexEnd?: number
+): [string, number | undefined, number | undefined, string] {
   return [str, indexStart, indexEnd, str.slice(indexStart, indexEnd)];
 }
 
-function padStartTestCase(str, targetLength, padString) {
+function padStartTestCase(
+  str: string,
+  targetLength: number,
+  padString?: string
+): [string, number, string | undefined, string] {
   return [str, targetLength, padString, str.padStart(targetLength, padString)];
 }
 
-function trimTestCase(str) {
+function trimTestCase(str: string) {
   return [str, str.trim()];
 }
 
@@ -71,7 +83,7 @@ test.each([
   padStartTestCase("abcdefghijklmn", 10),
   padStartTestCase("abc", -3),
   padStartTestCase("abc", 10, "123"),
-])("padStart(%p, %p) => %p", (str, targetLength, padString, expected) => {
+])("padStart(%p, %p, %p) => %p", (str, targetLength, padString, expected) => {
   expect(padStart(str, targetLength, padString)).toBe(expected);
 });
 
