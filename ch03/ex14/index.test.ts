@@ -1,7 +1,10 @@
-import { eq, lte } from "./index.js"; // typescript で書く場合は "./index.ts"
+import { eq, lte } from "./index.ts"; // typescript で書く場合は "./index.ts"
 
 class Test {
-  constructor(str, value) {
+  private _str;
+  private _value;
+
+  constructor(str: string, value: unknown) {
     this._str = str;
     this._value = value;
   }
@@ -14,7 +17,7 @@ class Test {
   }
 }
 
-function testFunc(str, value) {
+function testFunc(str: string, value: unknown) {
   const fn = () => {};
   fn.toString = () => str;
   fn.valueOf = () => value;
@@ -27,11 +30,12 @@ const hoge2 = new Test("hoge", 1);
 const date1 = new Date("2024-01-12T00:00:00Z");
 const date2 = new Date("2024-02-16T00:00:00Z");
 
-function eqTestCase(a, b) {
+function eqTestCase(a: unknown, b: unknown) {
   return [a, b, a == b];
 }
 
-function lteTestCase(a, b) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function lteTestCase(a: any, b: any) {
   return [a, b, a <= b];
 }
 
