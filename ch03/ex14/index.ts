@@ -46,25 +46,33 @@ export function eq(a: unknown, b: unknown) {
 }
 
 export function lte(a: unknown, b: unknown) {
-  //   。オペランドの一方がオブジェクトの場合、数値優先アルゴリズムを使ってオブジェ
-  // クトを基本型値に変換します。ただし、オブジェクトから数値への変換とは異なり、数値優先アル
-  // ゴリズムで返された基本型値は、数値には変換されません。
+  // 型変換
+  const changeType = (prop: unknown) => {
+    if (prop === true) {
+      return 1;
+    } else if (prop === false || prop === '' || prop === null) {
+      return 0;
+    }
+    return prop;
+  };
+
   if (
     (typeof a === 'number' && typeof b === 'number') ||
-    (typeof a === 'string' && typeof b === 'string')
+    (typeof a === 'string' && typeof b === 'string') ||
+    (typeof a === 'boolean' && typeof b === 'boolean')
   ) {
     if (a < b || a === b) {
       return true;
     }
     return false;
   }
-  // let modifiedA = a;
-  // let modifiedB = b;
+  const modifiedA = changeType(a);
+  const modifiedB = changeType(b);
 
-  // if (typeof modifiedA === 'number' && typeof modifiedB === 'number') {
-  //   if (modifiedA < modifiedB || modifiedA === modifiedB) {
-  //     return true;
-  //   }
-  // }
+  if (typeof modifiedA === 'number' && typeof modifiedB === 'number') {
+    if (modifiedA < modifiedB || modifiedA === modifiedB) {
+      return true;
+    }
+  }
   return false;
 }
