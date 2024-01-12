@@ -20,6 +20,18 @@ export function eq(a: unknown, b: unknown) {
   if (b === "") {
     modifiedB = 0;
   }
+  if (typeof a === "object" && a !== null && a !== undefined) {
+    modifiedA = a.valueOf();
+  }
+  if (typeof b === "object" && b !== null && b !== undefined) {
+    modifiedB = b.valueOf();
+  }
+  if (typeof modifiedA === "object" && a !== null && a !== undefined) {
+    modifiedA = true;
+  }
+  if (typeof modifiedB === "object" && b !== null && b !== undefined) {
+    modifiedB = true;
+  }
 
   if (modifiedA === modifiedB) {
     return true;
