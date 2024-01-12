@@ -1,3 +1,5 @@
-const \u3042 = "Hello,World";
+\u0063\u006f\u006e\u0073\u0074 \u3042 = "Hello,World";
 
 console.log(\u3042);
+// console.logもエスケープシーケンスにできる
+\u0063\u006f\u006e\u0073\u006f\u006c\u0065.\u006c\u006f\u0067("\u0048\u0065\u006c\u006c\u006f\u002c\u0057\u006f\u0072\u006c\u0064");

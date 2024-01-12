@@ -15,3 +15,5 @@ sampleObject[symbol_2] = 2;
 
 console.log(sampleObject[symbol_1]);
 console.log(sampleObject[symbol_2]);
+
+// Symbol.for()だと()の中身が同じなら同じ値を返す

@@ -24,3 +24,6 @@ console.log(obj.value);
 obj.value.map((v) => {
   console.log(v);
 });
+
+// String()でも強制的に呼ばれる
+console.log(String(obj));
