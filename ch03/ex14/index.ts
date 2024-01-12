@@ -1,35 +1,25 @@
 export function eq(a: unknown, b: unknown) {
   // 型変換
-  let modifiedA = a;
-  let modifiedB = b;
-  if (a === true) {
-    modifiedA = 1;
-  }
-  if (b === true) {
-    modifiedB = 1;
-  }
-  if (a === false) {
-    modifiedA = 0;
-  }
-  if (b === false) {
-    modifiedB = 0;
-  }
-  if (a === "") {
-    modifiedA = 0;
-  }
-  if (b === "") {
-    modifiedB = 0;
-  }
-  if (typeof a === "object" && a !== null && a !== undefined) {
+  const changeType = (prop: unknown) => {
+    if (prop === true) {
+      return 1;
+    } else if (prop === false || prop === '') {
+      return 0;
+    }
+    return prop;
+  };
+  let modifiedA = changeType(a);
+  let modifiedB = changeType(b);
+  if (typeof a === 'object' && a !== null && a !== undefined) {
     modifiedA = a.valueOf();
   }
-  if (typeof b === "object" && b !== null && b !== undefined) {
+  if (typeof b === 'object' && b !== null && b !== undefined) {
     modifiedB = b.valueOf();
   }
-  if (typeof modifiedA === "object" && a !== null && a !== undefined) {
+  if (typeof modifiedA === 'object' && a !== null && a !== undefined) {
     modifiedA = true;
   }
-  if (typeof modifiedB === "object" && b !== null && b !== undefined) {
+  if (typeof modifiedB === 'object' && b !== null && b !== undefined) {
     modifiedB = true;
   }
 
@@ -43,10 +33,10 @@ export function eq(a: unknown, b: unknown) {
     }
   }
 
-  if (typeof modifiedA === "string" || typeof modifiedB === "string") {
-    const stringValue = typeof modifiedA === "string" ? modifiedA : modifiedB;
+  if (typeof modifiedA === 'string' || typeof modifiedB === 'string') {
+    const stringValue = typeof modifiedA === 'string' ? modifiedA : modifiedB;
     const nonStringValue =
-      typeof modifiedA !== "string" ? modifiedA : modifiedB;
+      typeof modifiedA !== 'string' ? modifiedA : modifiedB;
     if (stringValue === String(nonStringValue)) {
       return true;
     }
@@ -56,6 +46,30 @@ export function eq(a: unknown, b: unknown) {
 }
 
 export function lte(a: unknown, b: unknown) {
-  // TODO: ここを実装しなさい
+  //   。オペランドの一方がオブジェクトの場合、数値優先アルゴリズムを使ってオブジェ
+  // クトを基本型値に変換します。ただし、オブジェクトから数値への変換とは異なり、数値優先アル
+  // ゴリズムで返された基本型値は、数値には変換されません。
+  if (typeof a === 'number' && typeof b === 'number') {
+    if (a < b || a === b) {
+      return true;
+    }
+    return false;
+  }
+  let modifiedA = a;
+  let modifiedB = b;
+
+  if (typeof a === 'string') {
+    modifiedA = Number(a);
+  }
+  if (typeof b === 'string') {
+    modifiedB = Number(b);
+  }
+  console.log(modifiedA);
+  console.log(modifiedB);
+  if (typeof modifiedA === 'number' && typeof modifiedB === 'number') {
+    if (modifiedA < modifiedB || modifiedA === modifiedB) {
+      return true;
+    }
+  }
   return false;
 }
