@@ -10,6 +10,7 @@ export const fibWhile = () => {
   }
   return fib;
 };
+
 export const fibDoWhile = () => {
   const fib = [1, 1];
   let i = 1;

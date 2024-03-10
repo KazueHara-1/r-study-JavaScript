@@ -22,7 +22,6 @@ export const mul = (num1: complex, num2: complex) => {
 
 export const div = (num1: complex, num2: complex) => {
   const denominator = num2.r ** 2 + num2.i ** 2;
-  console.log(denominator);
   return {
     r: (num1.r * num2.r + num1.i * num2.i) / denominator,
     i: (num1.i * num2.r - num1.r * num2.i) / denominator,
