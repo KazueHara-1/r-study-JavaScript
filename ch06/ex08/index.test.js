@@ -1,4 +1,4 @@
-import { restrict, substract } from "./index.ts";
+import { restrict, subtract } from "./index.ts";
 
 describe("restrict", () => {
   const symbol = Symbol("test");
@@ -56,7 +56,7 @@ describe("restrict", () => {
   );
 });
 
-describe("substract", () => {
+describe("subtract", () => {
   const symbol = Symbol("test");
   const parent = { parent: "parent" };
   test.each([
@@ -100,7 +100,7 @@ describe("substract", () => {
   ])(
     "$#: target,sources(1つ),expected = {$target, $sources, $expected}",
     ({ target, sources, expected }) => {
-      const result = substract(target, sources);
+      const result = subtract(target, sources);
       expect(result).toBe(target);
       expect(result).toEqual(expected);
     },
@@ -126,7 +126,7 @@ describe("substract", () => {
   ])(
     "$#: target,sources(2つ),expected = {$target, [$sources.0, $sources.1], $expected}",
     ({ target, sources, expected }) => {
-      const result = substract(target, ...sources);
+      const result = subtract(target, ...sources);
       expect(result).toBe(target);
       expect(result).toEqual(expected);
     },
