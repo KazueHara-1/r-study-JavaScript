@@ -1,9 +1,9 @@
-import { counterGroup } from "./index.ts";
+import { counterGroup } from './index.js';
 
-describe("counterGroup", () => {
-  describe("Counter", () => {
-    describe("#count", () => {
-      test("It returns incremented value", () => {
+describe('counterGroup', () => {
+  describe('Counter', () => {
+    describe('#count', () => {
+      test('It returns incremented value', () => {
         const cg = counterGroup();
         const counter = cg.newCounter();
         expect(counter.count()).toBe(0);
@@ -12,8 +12,8 @@ describe("counterGroup", () => {
       });
     });
 
-    describe("#reset", () => {
-      test("It resets incrementedd value", () => {
+    describe('#reset', () => {
+      test('It resets incrementedd value', () => {
         const cg = counterGroup();
         const counter = cg.newCounter();
         expect(counter.count()).toBe(0);
@@ -22,8 +22,8 @@ describe("counterGroup", () => {
       });
     });
 
-    describe("Isolation between Counter", () => {
-      test("States in counters are isolated", () => {
+    describe('Isolation between Counter', () => {
+      test('States in counters are isolated', () => {
         const cg = counterGroup();
         const c1 = cg.newCounter();
         const c2 = cg.newCounter();
@@ -38,8 +38,8 @@ describe("counterGroup", () => {
     });
   });
 
-  describe("#total", () => {
-    test("It returns total amount of all counters in CounterGroup", () => {
+  describe('#total', () => {
+    test('It returns total amount of all counters in CounterGroup', () => {
       const cg = counterGroup();
       expect(cg.total()).toBe(0);
       const c1 = cg.newCounter();
@@ -57,8 +57,8 @@ describe("counterGroup", () => {
     });
   });
 
-  describe("Isolation between CounterGroup", () => {
-    test("States in CounterGroups are isolated", () => {
+  describe('Isolation between CounterGroup', () => {
+    test('States in CounterGroups are isolated', () => {
       const cg1 = counterGroup();
 
       const c11 = cg1.newCounter();

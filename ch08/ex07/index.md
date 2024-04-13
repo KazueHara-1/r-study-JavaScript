@@ -1,0 +1,3 @@
+"jsファイル"までは見つかりませんでした…
+以下StackOverflowリンク
+https://stackoverflow.com/questions/881515/how-do-i-declare-a-namespace-in-javascript
