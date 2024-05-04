@@ -1,4 +1,4 @@
-import { recursive } from './index.ts';
+import { loop, recursive } from './index.ts';
 
 describe('recursive() test', () => {
   test.each([
@@ -24,6 +24,6 @@ describe('loop() test', () => {
     [2, 10, 1024],
     [2, 30, 1073741824],
   ])('%i ** %i = %i', (a, b, expected) => {
-    expect(recursive(a, b)).toBe(expected);
+    expect(loop(a, b)).toBe(expected);
   });
 });
