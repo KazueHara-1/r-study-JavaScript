@@ -57,5 +57,5 @@ describe("isEmailAddress", () => {
         // expect(isEmailAddress(`"\\"@example.com`)).toBe(true);
         // expect(isEmailAddress("foo@[127.0.0.1]")).toBe(true);
         // expect(isEmailAddress("foo(this is (nested)comment) @example.com")).toBe(true);
-    }
-}
+    });
+});

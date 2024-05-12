@@ -13,6 +13,13 @@ const resultA = Array(N * M).fill(0.0);
 function arrayMultiply() {
   resultA.fill(0.0);
   // 問題: ここで resultA に lhsA と rhsA の乗算結果を格納してね
+  for (let i1 = 0; i1 < N; i1++) {
+    for (let i2 = 0; i2 < K; i2++) {
+      for (let i3 = 0; i3 < M; i3++) {
+        resultA[K * i1 + i2] += lhsA[K * i1 + i3] * rhsA[K * i1 + i2];
+      }
+    }
+  }
 }
 
 // 型付き配列版 (Float64Array 以外の型も試してみると良い)
@@ -23,6 +30,13 @@ const resultB = new Float64Array(N * M).fill(0.0);
 function typedArrayMultiply() {
   resultB.fill(0.0);
   // 問題: ここで resultB に lhsB と rhsB の乗算結果を格納してね
+  for (let i1 = 0; i1 < N; i1++) {
+    for (let i2 = 0; i2 < K; i2++) {
+      for (let i3 = 0; i3 < M; i3++) {
+        resultB[K * i1 + i2] += lhsB[K * i1 + i3] * rhsB[K * i1 + i2];
+      }
+    }
+  }
 }
 
 const TEST_TIMES = 100;
