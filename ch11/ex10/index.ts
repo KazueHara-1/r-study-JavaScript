@@ -29,12 +29,22 @@ export const getWeekdayNumber = (start: string, end: string) => {
 };
 // 'YYYY-MM-DD'形式の日付とロケールを引数で受け取り、その日の曜日をロケールの形式の文字列で返す関数
 export const getLocalDay = (date: string, locale: string) => {
-  const event = new Date(date);
-  return event.toLocaleDateString(locale, {
+  const dateObj = new Date(date);
+  return dateObj.toLocaleDateString(locale, {
     weekday: 'long',
   });
 };
 
-// // ローカルのタイムゾーンにおいて先月 1 日 0 時 0 分 0 秒の Date オブジェクトを返す関数。
-// // ただし getMonth、setMonth は利用してはいけない。
-// export const getFirstDate = (date:string,locale:string) => {}
+// ローカルのタイムゾーンにおいて先月 1 日 0 時 0 分 0 秒の Date オブジェクトを返す関数。
+// ただし getMonth、setMonth は利用してはいけない。
+export const getFirstDate = (date: string) => {
+  const dateObj = new Date(date);
+  // 前の月の最終日
+  dateObj.setDate(0);
+  // 前の月の最初の日
+  dateObj.setDate(1);
+  dateObj.setHours(0);
+  dateObj.setMinutes(0);
+  dateObj.setSeconds(0);
+  return dateObj;
+};
