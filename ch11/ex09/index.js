@@ -86,31 +86,39 @@ export function match(pat, s) {
 // seq2 の可変長引数版
 export function seq(...pats) {
   // HINT: seq(p1, p2, p3, p4) = seq2(seq2(seq2(p1, p2), p3), p4)
-  throw new Error("実装してね");
+  let result = quote('');
+  for (let i = pats.length - 1; i >= 0; i--) {
+    result = seq2(pats[i], result);
+  }
+  return result;
 }
 
 // alt2 の可変長引数版
 export function alt(...pats) {
   // HINT: alt(p1, p2, p3, p4) =  alt2(alt2(alt2(p1, p2), p3), p4)
-  throw new Error("実装してね");
+  let result = quote('');
+  for (let i = pats.length - 1; i >= 0; i--) {
+    result = alt2(pats[i], result);
+  }
+  return result;
 }
 
 // 任意の1文字にマッチ
 export function dot() {
   // HINT: quote の実装を参考にすると良い
-  throw new Error("実装してね");
+  return (str) => str.length === 1;
 }
 
 // [...] に対応 (例: [abc] は charFrom("abc"))
 export function charFrom(s) {
   // HINT: quote の実装を参考にすると良い
-  throw new Error("実装してね");
+  return (str) => [...s].some((char) => char === str);
 }
 
 // [^...] に対応
 export function charNotFrom(s) {
   // HINT: quote の実装を参考にすると良い
-  throw new Error("実装してね");
+  return (str) => [...s].every((char) => char !== str);
 }
 
 // 繰り返し (min 回数以上 max 回数以下)
@@ -118,7 +126,7 @@ export function repeat(pat, min = 0, max = Infinity) {
   // HINT: 再帰を上手く使うこと
   // パターン P の繰り返し `P{min,max}` は min > 0 の時 `(P)(P{min-1,max-1})` と分解できる
   // seq2, alt2 を上手く使うと良い
-  throw new Error("実装してね");
+  return;
 }
 
 // 正規表現 /([Jj]ava([Ss]cript)?) is fun/ は以下
