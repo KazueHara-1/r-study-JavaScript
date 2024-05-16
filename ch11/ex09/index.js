@@ -48,7 +48,9 @@
 // ```
 
 export function quote(s) {
-  return (str, pos, k) => str.indexOf(s, pos) === pos && k(str, pos + s.length);
+  return (str, pos, k) => {
+    return str.indexOf(s, pos) === pos && k(str, pos + s.length);
+  };
 }
 
 // seq2(first, second) は first の次に second がマッチする正規表現を表現する
@@ -106,19 +108,21 @@ export function alt(...pats) {
 // 任意の1文字にマッチ
 export function dot() {
   // HINT: quote の実装を参考にすると良い
-  return (str) => str.length === 1;
+  return (str, pos, k) => str.length >= 1 && k(str, pos + 1);
 }
 
 // [...] に対応 (例: [abc] は charFrom("abc"))
 export function charFrom(s) {
   // HINT: quote の実装を参考にすると良い
-  return (str) => [...s].some((char) => char === str);
+  return (str, pos, k) =>
+    [...s].some((char) => char === str[pos]) && k(str, pos + 1);
 }
 
 // [^...] に対応
 export function charNotFrom(s) {
   // HINT: quote の実装を参考にすると良い
-  return (str) => [...s].every((char) => char !== str);
+  return (str, pos, k) =>
+    [...s].every((char) => char !== str[pos]) && k(str, pos + 1);
 }
 
 // 繰り返し (min 回数以上 max 回数以下)
@@ -126,7 +130,20 @@ export function repeat(pat, min = 0, max = Infinity) {
   // HINT: 再帰を上手く使うこと
   // パターン P の繰り返し `P{min,max}` は min > 0 の時 `(P)(P{min-1,max-1})` と分解できる
   // seq2, alt2 を上手く使うと良い
-  return;
+  if (min === 0) {
+    if (max !== Infinity && max !== 0) {
+      const condArray = [];
+      for (let i = 0; i < max; i++) {
+        // alt2(pat, quote(''))がmax回繰り返すことを確かめる
+        condArray.push(alt2(pat, quote('')));
+      }
+      return seq(condArray);
+    } else {
+      return quote('');
+    }
+  } else {
+    return seq2(pat, repeat(pat, min - 1, max - 1));
+  }
 }
 
 // 正規表現 /([Jj]ava([Ss]cript)?) is fun/ は以下
