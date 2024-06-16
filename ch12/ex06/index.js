@@ -2,7 +2,6 @@ import * as fs from "fs";
 
 export function* walk(rootPath) {
   try {
-    // 指定されたディレクトリ内のファイルおよびサブディレクトリのリストを取得
     const files = fs.readdirSync(rootPath, {
       withFileTypes: true,
     });
