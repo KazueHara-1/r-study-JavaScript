@@ -4,26 +4,26 @@ import {
   fetchSumOfFileSizesBefore,
 } from "../ex04/index_before.js";
 
-test("正常系", async () => {
+test("fetchFirstFileSize", async () => {
   let result;
-  fetchFirstFileSize("ch13/ex03", (err, size) => {
-    let expect;
+  await fetchFirstFileSize("ch13/ex03", (err, size) => {
+    let expected;
     fetchFirstFileSizeBefore("ch13/ex03", (err, size) => {
-      expect = size;
+      expected = size;
     });
     result = size;
-    expect(result).toBe(expect);
+    expect(result).toBe(expected);
   });
 });
 
-test("正常系", async () => {
+test("fetchSumOfFileSizes", async () => {
   let result;
-  fetchSumOfFileSizes("ch13/ex03", (err, size) => {
-    let expect;
-    fetchSumOfFileSizesBefore("ch13/ex03", (err, size) => {
-      expect = size;
-    });
+  let expected;
+  await fetchSumOfFileSizes("ch13/ex03", (err, size) => {
     result = size;
-    expect(result).toBe(expect);
   });
+  fetchSumOfFileSizesBefore("ch13/ex03", (err, size) => {
+    expected = size;
+  });
+  expect(result).toBe(expected);
 });

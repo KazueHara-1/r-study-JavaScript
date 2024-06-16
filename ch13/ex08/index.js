@@ -17,30 +17,24 @@ export async function fetchFirstFileSize(path, callback) {
 }
 
 export async function fetchSumOfFileSizes(path, callback) {
-  return await fsPromises
-    .readdir(path)
-    .catch((err) => callback(err))
-    .then((files) => {
-      let total = 0;
-      const rest = [...files];
+  try {
+    const files = await fsPromises.readdir(path);
+    let total = 0;
+    const rest = [...files];
 
-      function iter() {
-        if (rest.length === 0) {
-          callback(null, total);
-          return;
-        }
-
-        const next = rest.pop();
-        fsPromises
-          .stat([path, next].join())
-          .catch((err) => {
-            callback(err);
-          })
-          .then((stats) => {
-            total += stats.size;
-            iter();
-          });
+    const iter = async () => {
+      if (rest.length === 0) {
+        callback(null, total);
+        return;
       }
-      iter();
-    });
+
+      const next = rest.pop();
+      const stats = await fsPromises.stat([path, next].join("/"));
+      total += stats.size;
+      await iter();
+    };
+    iter();
+  } catch (err) {
+    callback(err);
+  }
 }
