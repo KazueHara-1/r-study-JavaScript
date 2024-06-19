@@ -1,9 +1,13 @@
+import { Crypto } from "@peculiar/webcrypto";
+
+global.crypto = new Crypto();
+
 export class PromisePool {
   status: "start" | "stop" = "stop";
   queSize: number;
   maxRunningPromises: number;
-  runningPromises: (() => Promise<void>)[] = [];
-  que: (() => Promise<void>)[] = [];
+  runningPromises: { id: string; promise: () => Promise<void> }[] = [];
+  que: { id: string; promise: () => Promise<void> }[] = [];
   /**
    * Constructs PromisePool.
    *
@@ -59,6 +63,20 @@ export class PromisePool {
   async dispatch(promiseFactory: () => Promise<void>): Promise<void> {
     if (this.status === "stop") {
       throw new Error("PromisePool is not started.");
+    }
+    if (this.runningPromises.length < this.maxRunningPromises) {
+      const uuid = crypto.randomUUID();
+      // 一度runningPromisesに追加
+      this.runningPromises.push({ id: uuid, promise: promiseFactory });
+      // 実行を待つ
+      await promiseFactory();
+      // 実行が終わったらrunningPromisesから削除
+      // そもそも同じ配列を非同期であまりいじりたくないが…
+      const index = this.runningPromises.findIndex((el) => el.id === uuid);
+      this.runningPromises.splice(index, 1);
+    } else if (this.que.length < this.queSize) {
+      const uuid = crypto.randomUUID();
+      this.que.push({ id: uuid, promise: promiseFactory });
     }
   }
 }
