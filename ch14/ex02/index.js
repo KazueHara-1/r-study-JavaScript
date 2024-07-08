@@ -1,5 +1,5 @@
 export class MyArrayLike {
-  // TODO
+  [Symbol.isConcatSpreadable] = true;
 }
 
 export class MyArray extends Array {
@@ -7,5 +7,10 @@ export class MyArray extends Array {
     super(...items);
   }
 
-  // TODO
+  static get [Symbol.species]() {
+    return MyArrayLike;
+  }
+  map(callback) {
+    return super.map(callback);
+  }
 }
