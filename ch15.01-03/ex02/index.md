@@ -1,0 +1,1 @@
+index.htmlをlocalhostで起動して確認した。
