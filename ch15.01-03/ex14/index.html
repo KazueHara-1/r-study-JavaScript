@@ -12,6 +12,16 @@
           const products = document.querySelectorAll("#productList li");
           products.forEach((product) => {
             // ここにコードを書いて完成させる
+            if (selectedCategory) {
+            }
+            if (
+              product.dataset.category === selectedCategory ||
+              selectedCategory === "all"
+            ) {
+              product.hidden = false;
+            } else {
+              product.hidden = true;
+            }
           });
         });
     </script>
