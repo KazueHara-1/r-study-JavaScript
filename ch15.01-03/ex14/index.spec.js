@@ -5,9 +5,13 @@ test.describe("test page", () => {
     await page.goto("/ch15.01-03/ex14/index.html");
     await page.locator("select").selectOption("food");
 
-    await expect(page.locator('li[data-testid="food1"]')).toBeVisible();
-    await expect(page.locator('li[data-testid="stationery1"]')).toBeHidden();
-    await expect(page.locator('li[data-testid="stationery2"]')).toBeHidden();
+    // playwrightではgetByTestIdでも可。
+    // await expect(page.locator('li[data-testid="food1"]')).toBeVisible();
+    // await expect(page.locator('li[data-testid="stationery1"]')).toBeHidden();
+    // await expect(page.locator('li[data-testid="stationery2"]')).toBeHidden();
+    await expect(page.getByTestId("food1")).toBeVisible();
+    await expect(page.getByTestId("stationery1")).toBeHidden();
+    await expect(page.getByTestId("stationery2")).toBeHidden();
   });
   test("文房具", async ({ page }) => {
     await page.goto("/ch15.01-03/ex14/index.html");
