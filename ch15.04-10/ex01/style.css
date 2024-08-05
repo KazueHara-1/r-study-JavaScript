@@ -1,3 +1,89 @@
-.completed {
+/* フォントをArial, sans-serifにし、背景色を薄い青色にする。 */
+/* コンテンツを縦並びにする。 */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #e6ecf0;
+  color: #14171a;
+  margin-top: 200px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+}
+/* 要素を中央寄せにし、マージンを設定 */
+#new-todo-form {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+/* 入力フォームの横幅を調整し、丸みをつける。 */
+#new-todo {
+  width: 300px;
+  padding: 10px;
+  border: 1px solid #ccd6dd;
+  border-radius: 20px;
+  outline: none;
+}
+/* ボタンの色を青にし、文字は白色にする。また、ボタンの角に丸みをつける。 */
+button {
+  background-color: #1da1f2;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 10px 20px;
+  cursor: pointer;
+  margin-left: 10px;
+}
+/* マウスホバーでボタンの色を若干暗くする */
+button:hover {
+  background-color: #0d95e8;
+}
+/* TODOリストの横幅を調整する */
+#todo-list {
+  list-style: none;
+  padding: 0;
+  width: 320px;
+}
+/* TODOリストの背景色を白色にする。 */
+/* 角に丸みをつける。 */
+li {
+  background-color: white;
+  border: 1px solid #e1e8ed;
+  border-radius: 20px;
+  padding: 10px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+/* 完了した項目に取り消し線をつけ、文字をグレーアウトする。 */
+li.completed .content {
   text-decoration: line-through;
+  color: #657786;
+}
+/* コンテンツを上下中央ぞろえにする。 */
+.view {
+  display: flex;
+  align-items: center;
+}
+/* チェックボックスとTODOリストの内容との間のマージンを調整 */
+.toggle {
+  margin-right: 10px;
+}
+/* TODOリストの余りをどう割り当てるかを調整するが、今回はあまり関与していない。 */
+.content {
+  flex-grow: 1;
+}
+/* アイテム削除ボタンの背景色や文字色を調整する。 */
+.destroy {
+  background: none;
+  border: none;
+  color: #e0245e;
+  cursor: pointer;
+  font-size: 16px;
+}
+/* アイテム削除ボタンにマウスホバーした時、文字色が若干暗くなる。 */
+.destroy:hover {
+  color: #c21c50;
 }
