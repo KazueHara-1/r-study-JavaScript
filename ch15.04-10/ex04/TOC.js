@@ -16,31 +16,8 @@
     style.id = "TOC-style";
     document.body.prepend(style);
   }
-  style.textContent = `
-  #TOC {
-    border: solid black 1px;
-    margin: 10px;
-    padding: 10px;
-
-    /* 追加 (右上に固定表示) */
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    width: 250px;
-    padding: 10px;
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
-    overflow-y: auto;
-    max-height: calc(100vh - 40px);
-    z-index: 9999;
-  }
-  .TOCEntry { margin: 5px 0px; }
-  .TOCEntry a { text-decoration: none; }
-  .TOCLevel1 { font-weight: bold; }
-  .TOCLevel2 { margin-left: .25in; }
-  .TOCLevel3 { margin-left: .5in; }
-  .TOCSectNum:after { content: ": "; }
-      `;
+  style.textContent =
+    '\n  #TOC {\n    border: solid black 1px;\n    margin: 10px;\n    padding: 10px;\n\n    /* 追加 (右上に固定表示) */\n    position: fixed;\n    top: 20px;\n    right: 20px;\n    width: 250px;\n    padding: 10px;\n    background-color: #f0f0f0;\n    border: 1px solid #ccc;\n    overflow-y: auto;\n    max-height: calc(100vh - 40px);\n    z-index: 9999;\n  }\n  .TOCEntry { margin: 5px 0px; }\n  .TOCEntry a { text-decoration: none; }\n  .TOCLevel1 { font-weight: bold; }\n  .TOCLevel2 { margin-left: .25in; }\n  .TOCLevel3 { margin-left: .5in; }\n  .TOCSectNum:after { content: ": "; }\n      ';
 
   /* NOTE: 以下は書籍のサンプルと同じ */
   let headings = document.querySelectorAll("h2,h3,h4,h5,h6");
