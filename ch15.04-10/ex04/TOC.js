@@ -1,6 +1,4 @@
-/* ブックマークレットとしてブラウザに登録する場合は以下のコードの先頭に javascript: を追加 */
-/* // から始まるコメントはブックマークレット内で正しく動作しないことがあるため注意 */
-(() => {
+javascript: (() => {
   /* NOTE: ブックマークレットによって実行する想定のため DOMContentLoaded のイベントで実行しない */
   let toc = document.querySelector("#TOC");
   if (!toc) {
@@ -46,6 +44,16 @@
     let link = document.createElement("a");
     link.href = `#${fragmentName}`;
     link.innerHTML = heading.innerHTML;
+
+    link.addEventListener("click", (e) => {
+      e.preventDefault();
+      const target = document.querySelector(`a[name="${fragmentName}"]`);
+      if (!target) {
+        return;
+      }
+      target.scrollIntoView();
+      /* NOTE: scrollTo または scrollIntoView でスムーズにスクロールしなさい  */
+    });
 
     let entry = document.createElement("div");
     entry.classList.add("TOCEntry", `TOCLevel${level}`);
