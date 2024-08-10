@@ -9,13 +9,15 @@ customElements.define(
       // 円の作成に必要なスタイルを設定する。
       this.style.display = "inline-block";
       this.style.borderRadius = "50%";
-      //   this.style.border = "solid black 1px";
       this.style.transform = "translateY(10%)";
       // 大きさがまだ設定されていない場合、現在のフォントサイズを基に
       // デフォルトの大きさを設定する。
       if (!this.style.width) {
         this.style.width = "0.8em";
         this.style.height = "0.8em";
+      }
+      if (!this.style.border) {
+        this.style.border = "solid black 1px";
       }
     }
     // 静的なobservedAttributes プロパティで、値が変化したときに
@@ -38,11 +40,15 @@ customElements.define(
           this.style.backgroundColor = newValue;
           break;
         case "border-color":
-          console.log(newValue);
-          this.style.border = "solid";
+          if (!this.style.border) {
+            this.style.border = "solid 1px";
+          }
           this.style.borderColor = newValue;
           break;
         case "border-width":
+          if (!this.style.border) {
+            this.style.border = "solid black";
+          }
           this.style.borderWidth = newValue;
           break;
       }
