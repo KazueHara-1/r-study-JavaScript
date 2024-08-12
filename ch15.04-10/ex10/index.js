@@ -47,6 +47,41 @@ function updateGrid(grid) {
   for (let row = 0; row < ROWS; row++) {
     for (let col = 0; col < COLS; col++) {
       // 周囲のセルの生存数を数えて nextGrid[row][col] に true or false を設定する (実装してね)
+      let surv = 0; // 生存数
+      for (let x = -1; x <= 1; x++) {
+        for (let y = -1; y <= 1; y++) {
+          if (
+            row + x >= 0 &&
+            row + x < ROWS &&
+            col + y >= 0 &&
+            col + y < COLS
+          ) {
+            surv = grid[row + x][col + y] ? surv + 1 : surv;
+          }
+        }
+      }
+
+      nextGrid[row][col] = false;
+      // 誕生
+      //     死んでいるセルに隣接する生きたセルがちょうど3つあれば、次の世代が誕生する。
+      if (!grid[row][col] && surv === 3) {
+        nextGrid[row][col] = true;
+      }
+      // 生存
+      //     生きているセルに隣接する生きたセルが2つか3つならば、次の世代でも生存する。
+      else if (grid[row][col] && (surv === 3 || surv === 2)) {
+        nextGrid[row][col] = true;
+      }
+      // 過疎
+      //     生きているセルに隣接する生きたセルが1つ以下ならば、過疎により死滅する。
+      else if (grid[row][col] && surv <= 1) {
+        nextGrid[row][col] = false;
+      }
+      // 過密
+      //     生きているセルに隣接する生きたセルが4つ以上ならば、過密により死滅する。
+      else if (grid[row][col] && surv >= 4) {
+        nextGrid[row][col] = false;
+      }
     }
   }
   return nextGrid;
