@@ -19,30 +19,10 @@ async function checkToDo(page, index) {
 
 /**
  * @param {import("@playwright/test").Page} page
- * @param {number} index
- */
-async function deleteToDo(page, index) {
-  await page
-    .getByRole("listitem")
-    .nth(index)
-    .getByRole("button", { name: "❌" })
-    .click();
-}
-
-/**
- * @param {import("@playwright/test").Page} page
  */
 async function countToDos(page) {
   // aタグx3が存在するのでそれを引く
   return (await page.getByRole("listitem").count()) - 3;
-}
-
-/**
- * @param {import("@playwright/test").Page} page
- * @param {number} index
- */
-function queryToDo(page, index) {
-  return page.getByRole("listitem").nth(index);
 }
 
 test.describe("simple todo app", () => {
@@ -69,5 +49,15 @@ test.describe("simple todo app", () => {
   test("Check 'Completed'", async ({ page }) => {
     await page.getByText("Completed").click();
     expect(await countToDos(page)).toBe(1);
+  });
+  test("Check All Hash", async ({ page }) => {
+    await page.getByText("All").click();
+    expect(await countToDos(page)).toBe(3);
+    await page.getByText("Active").click();
+    expect(await countToDos(page)).toBe(2);
+    await page.getByText("Completed").click();
+    expect(await countToDos(page)).toBe(1);
+    await page.getByText("All").click();
+    expect(await countToDos(page)).toBe(3);
   });
 });
