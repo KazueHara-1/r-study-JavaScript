@@ -2,11 +2,47 @@ const form = document.querySelector("#new-todo-form");
 const list = document.querySelector("#todo-list");
 const input = document.querySelector("#new-todo");
 
+const timeOutFetch = async (url, body) => {
+  const controller = new AbortController();
+  const options = { signal: controller.signal, timeout: 3000 };
+  setTimeout(() => {
+    controller.abort();
+  }, options.timeout);
+  return fetch(url, { ...body, ...options });
+};
+
+const retryFetch = async (url, body) => {
+  const loading = document.getElementsByClassName("loading");
+  loading[0].classList.remove("hidden");
+  const maxRetry = 10;
+  try {
+    let result;
+    for (let i = 0; i < maxRetry; i++) {
+      result = await timeOutFetch(url, body);
+      if (500 <= result.status && result.status < 600) {
+        await new Promise((resolve) =>
+          setTimeout(resolve, 1000 * Math.pow(2, i))
+        );
+      } else {
+        break;
+      }
+    }
+    return result;
+  } catch (e) {
+    if (e.name === "AbortError") {
+      throw new Error("タイムアウトしました。");
+    }
+    throw e;
+  } finally {
+    loading[0].classList.add("hidden");
+  }
+};
+
 document.addEventListener("DOMContentLoaded", async () => {
   // TODO: ここで API を呼び出してタスク一覧を取得し、
   // 成功したら取得したタスクを appendToDoItem で ToDo リストの要素として追加しなさい
   try {
-    const resp = await fetch("/api/tasks", { method: "GET" });
+    const resp = await retryFetch("/api/tasks", { method: "GET" });
     if (!resp.status === 200) {
       const result = await resp.json();
       throw new Error(result.message);
@@ -34,7 +70,7 @@ form.addEventListener("submit", async (e) => {
   // TODO: ここで API を呼び出して新しいタスクを作成し
   // 成功したら作成したタスクを appendToDoElement で ToDo リストの要素として追加しなさい
   try {
-    const resp = await fetch("/api/tasks", {
+    const resp = await retryFetch("/api/tasks", {
       method: "POST",
       body: `{"name": "${todo}"}`,
     });
@@ -66,7 +102,7 @@ function appendToDoItem(task) {
   toggle.addEventListener("change", async (e) => {
     const target = e.target;
     try {
-      const resp = await fetch(`/api/tasks/${target.id}`);
+      const resp = await retryFetch(`/api/tasks/${target.id}`);
       if (resp.status !== 200) {
         const result = await resp.json();
         throw new Error(result.message);
@@ -74,7 +110,7 @@ function appendToDoItem(task) {
       const result = await resp.json();
       const updatedData = { ...result };
       updatedData.status = target.checked ? "completed" : "active";
-      const updateResp = await fetch(`/api/tasks/${target.id}`, {
+      const updateResp = await retryFetch(`/api/tasks/${target.id}`, {
         method: "PATCH",
         body: JSON.stringify(updatedData),
       });
@@ -96,7 +132,7 @@ function appendToDoItem(task) {
   destroy.addEventListener("click", async (e) => {
     const target = e.target;
     try {
-      const resp = await fetch(`/api/tasks/${target.id}`, {
+      const resp = await retryFetch(`/api/tasks/${target.id}`, {
         method: "DELETE",
       });
       if (resp.status !== 204) {
