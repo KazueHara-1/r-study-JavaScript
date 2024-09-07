@@ -7,13 +7,13 @@ document.addEventListener("DOMContentLoaded", async () => {
   // 成功したら取得したタスクを appendToDoItem で ToDo リストの要素として追加しなさい
   try {
     const resp = await fetch("/api/tasks", { method: "GET" });
-    if (resp.ok) {
-      const body = await resp.json();
-      const items = body.items;
-      items.forEach((item) => appendToDoItem(item));
-    } else {
-      alert(resp.statusText);
+    if (!resp.status === 200) {
+      const result = await resp.json();
+      throw new Error(result.message);
     }
+    const body = await resp.json();
+    const items = body.items;
+    items.forEach((item) => appendToDoItem(item));
   } catch (e) {
     alert(e);
   }
@@ -33,15 +33,19 @@ form.addEventListener("submit", async (e) => {
 
   // TODO: ここで API を呼び出して新しいタスクを作成し
   // 成功したら作成したタスクを appendToDoElement で ToDo リストの要素として追加しなさい
-  const resp = await fetch("/api/tasks", {
-    method: "POST",
-    body: `{"name": "${todo}"}`,
-  });
-  if (resp.ok && resp.status === 201) {
+  try {
+    const resp = await fetch("/api/tasks", {
+      method: "POST",
+      body: `{"name": "${todo}"}`,
+    });
+    if (!resp.status === 201) {
+      const result = await resp.json();
+      throw new Error(result.message);
+    }
     const item = await resp.json();
     appendToDoItem(item);
-  } else {
-    alert(resp.statusText);
+  } catch (e) {
+    alert(e);
   }
 });
 
