@@ -2,17 +2,73 @@ const form = document.querySelector("#new-todo-form");
 const list = document.querySelector("#todo-list");
 const input = document.querySelector("#new-todo");
 
+// APIに似たものを作る
+const TASK_KEY = "todoList";
+
+// タスクの一覧を取得する
+const getTasks = () => {
+  const data = localStorage.getItem(TASK_KEY);
+  try {
+    if (data) {
+      const todos = JSON.parse(data);
+      return todos;
+    }
+    // データがない場合は空行列を返す。
+    return [];
+  } catch (e) {
+    throw new Error("Local Storage のデータが不正です");
+  }
+};
+
+// タスクの ID を指定して取得する
+const getSpecificTask = (id) => {
+  const tasks = getTasks();
+  const task = tasks.find((task) => task.id.toString() === id);
+  if (task) {
+    return task;
+  }
+  throw new Error("指定されたIDのタスクは存在しません。");
+};
+
+// タスクを新規作成する
+
+const createTask = (todo) => {
+  const tasks = getTasks();
+  const newTasks = [...tasks];
+  const newTask = {
+    id: tasks.length === 0 ? 0 : tasks[tasks.length - 1].id + 1, // 最大のIDより1大きいものを今回のIDとする
+    name: todo,
+    status: "active",
+  };
+  newTasks.push(newTask);
+  localStorage.setItem(TASK_KEY, JSON.stringify(newTasks));
+  return newTask;
+};
+
+// タスクを一部更新する
+
+const updateTask = (id, task) => {
+  const tasks = getTasks();
+  const taskIndex = tasks.findIndex((task) => task.id === id);
+  const updatedTasks = [...tasks];
+  updatedTasks[taskIndex] = task;
+  localStorage.setItem(TASK_KEY, JSON.stringify(updatedTasks));
+};
+
+// タスクを削除する
+const deleteTask = (id) => {
+  const tasks = getTasks();
+  const taskIndex = tasks.findIndex((task) => task.id.toString() === id);
+  const removedTasks = [...tasks];
+  removedTasks.splice(taskIndex, 1);
+  localStorage.setItem(TASK_KEY, JSON.stringify(removedTasks));
+};
+
 document.addEventListener("DOMContentLoaded", async () => {
   // TODO: ここで API を呼び出してタスク一覧を取得し、
   // 成功したら取得したタスクを appendToDoItem で ToDo リストの要素として追加しなさい
   try {
-    const resp = await fetch("/api/tasks", { method: "GET" });
-    if (!resp.status === 200) {
-      const result = await resp.json();
-      throw new Error(result.message);
-    }
-    const body = await resp.json();
-    const items = body.items;
+    const items = getTasks();
     items.forEach((item) => appendToDoItem(item));
   } catch (e) {
     alert(e);
@@ -34,15 +90,7 @@ form.addEventListener("submit", async (e) => {
   // TODO: ここで API を呼び出して新しいタスクを作成し
   // 成功したら作成したタスクを appendToDoElement で ToDo リストの要素として追加しなさい
   try {
-    const resp = await fetch("/api/tasks", {
-      method: "POST",
-      body: `{"name": "${todo}"}`,
-    });
-    if (!resp.status === 201) {
-      const result = await resp.json();
-      throw new Error(result.message);
-    }
-    const item = await resp.json();
+    const item = createTask(todo);
     appendToDoItem(item);
   } catch (e) {
     alert(e);
@@ -66,22 +114,10 @@ function appendToDoItem(task) {
   toggle.addEventListener("change", async (e) => {
     const target = e.target;
     try {
-      const resp = await fetch(`/api/tasks/${target.id}`);
-      if (resp.status !== 200) {
-        const result = await resp.json();
-        throw new Error(result.message);
-      }
-      const result = await resp.json();
-      const updatedData = { ...result };
+      const task = getSpecificTask(target.id);
+      const updatedData = { ...task };
       updatedData.status = target.checked ? "completed" : "active";
-      const updateResp = await fetch(`/api/tasks/${target.id}`, {
-        method: "PATCH",
-        body: JSON.stringify(updatedData),
-      });
-      if (updateResp.status !== 200) {
-        const result = await resp.json();
-        throw new Error(result.message);
-      }
+      updateTask(updatedData);
       label.style.textDecorationLine = target.checked ? "line-through" : "none";
     } catch (e) {
       alert(e);
@@ -96,13 +132,7 @@ function appendToDoItem(task) {
   destroy.addEventListener("click", async (e) => {
     const target = e.target;
     try {
-      const resp = await fetch(`/api/tasks/${target.id}`, {
-        method: "DELETE",
-      });
-      if (resp.status !== 204) {
-        const result = await resp.json();
-        throw new Error(result.message);
-      }
+      deleteTask(target.id);
       elem.remove();
     } catch (e) {
       alert(e);
