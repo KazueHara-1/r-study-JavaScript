@@ -6,7 +6,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   // TODO: ここで API を呼び出してタスク一覧を取得し、
   // 成功したら取得したタスクを appendToDoItem で ToDo リストの要素として追加しなさい
   try {
-    const resp = await fetch("/api/tasks", { method: "GET" });
+    const resp = await fetch("http://localhost:3001/api/tasks", {
+      method: "GET",
+      mode: "cors",
+    });
     if (!resp.status === 200) {
       const result = await resp.json();
       throw new Error(result.message);
@@ -34,8 +37,9 @@ form.addEventListener("submit", async (e) => {
   // TODO: ここで API を呼び出して新しいタスクを作成し
   // 成功したら作成したタスクを appendToDoElement で ToDo リストの要素として追加しなさい
   try {
-    const resp = await fetch("/api/tasks", {
+    const resp = await fetch("http://localhost:3001/api/tasks", {
       method: "POST",
+      mode: "cors",
       body: `{"name": "${todo}"}`,
     });
     if (!resp.status === 201) {
@@ -66,7 +70,10 @@ function appendToDoItem(task) {
   toggle.addEventListener("change", async (e) => {
     const target = e.target;
     try {
-      const resp = await fetch(`/api/tasks/${target.id}`);
+      const resp = await fetch(`http://localhost:3001/api/tasks/${target.id}`, {
+        method: "GET",
+        mode: "cors",
+      });
       if (resp.status !== 200) {
         const result = await resp.json();
         throw new Error(result.message);
@@ -74,10 +81,14 @@ function appendToDoItem(task) {
       const result = await resp.json();
       const updatedData = { ...result };
       updatedData.status = target.checked ? "completed" : "active";
-      const updateResp = await fetch(`/api/tasks/${target.id}`, {
-        method: "PATCH",
-        body: JSON.stringify(updatedData),
-      });
+      const updateResp = await fetch(
+        `http://localhost:3001/api/tasks/${target.id}`,
+        {
+          method: "PATCH",
+          mode: "cors",
+          body: JSON.stringify(updatedData),
+        }
+      );
       if (updateResp.status !== 200) {
         const result = await resp.json();
         throw new Error(result.message);
@@ -96,8 +107,9 @@ function appendToDoItem(task) {
   destroy.addEventListener("click", async (e) => {
     const target = e.target;
     try {
-      const resp = await fetch(`/api/tasks/${target.id}`, {
+      const resp = await fetch(`http://localhost:3001/api/tasks/${target.id}`, {
         method: "DELETE",
+        mode: "cors",
       });
       if (resp.status !== 204) {
         const result = await resp.json();
