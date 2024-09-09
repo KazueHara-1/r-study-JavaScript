@@ -20,6 +20,20 @@ const getTasks = () => {
   }
 };
 
+const windowGetTasks = () => {
+  const data = window.localStorage.getItem(TASK_KEY);
+  try {
+    if (data) {
+      const todos = JSON.parse(data);
+      return todos;
+    }
+    // データがない場合は空行列を返す。
+    return [];
+  } catch (e) {
+    throw new Error("Local Storage のデータが不正です");
+  }
+};
+
 // タスクの ID を指定して取得する
 const getSpecificTask = (id) => {
   const tasks = getTasks();
@@ -49,7 +63,7 @@ const createTask = (todo) => {
 
 const updateTask = (id, task) => {
   const tasks = getTasks();
-  const taskIndex = tasks.findIndex((task) => task.id === id);
+  const taskIndex = tasks.findIndex((task) => task.id.toString() === id);
   const updatedTasks = [...tasks];
   updatedTasks[taskIndex] = task;
   localStorage.setItem(TASK_KEY, JSON.stringify(updatedTasks));
@@ -63,6 +77,19 @@ const deleteTask = (id) => {
   removedTasks.splice(taskIndex, 1);
   localStorage.setItem(TASK_KEY, JSON.stringify(removedTasks));
 };
+
+window.addEventListener("storage", (e) => {
+  // 一度タスクを全削除
+  const taskList = document.getElementsByTagName("li");
+  Array.from(taskList).forEach((task) => task.remove());
+  // 追加
+  try {
+    const items = windowGetTasks();
+    items.forEach((item) => appendToDoItem(item));
+  } catch (e) {
+    alert(e);
+  }
+});
 
 document.addEventListener("DOMContentLoaded", async () => {
   // TODO: ここで API を呼び出してタスク一覧を取得し、
@@ -104,10 +131,12 @@ function appendToDoItem(task) {
 
   const label = document.createElement("label");
   label.textContent = task.name;
-  label.style.textDecorationLine = "none";
+  label.style.textDecorationLine =
+    task.status === "completed" ? "line-through" : "none";
 
   const toggle = document.createElement("input");
   toggle.type = "checkbox";
+  toggle.checked = task.status === "completed";
   toggle.id = task.id;
   // TODO: toggle が変化 (change) した際に API を呼び出してタスクの状態を更新し
   // 成功したら label.style.textDecorationLine を変更しなさい
@@ -117,7 +146,7 @@ function appendToDoItem(task) {
       const task = getSpecificTask(target.id);
       const updatedData = { ...task };
       updatedData.status = target.checked ? "completed" : "active";
-      updateTask(updatedData);
+      updateTask(target.id, updatedData);
       label.style.textDecorationLine = target.checked ? "line-through" : "none";
     } catch (e) {
       alert(e);
