@@ -2,13 +2,16 @@ const form = document.querySelector("#new-todo-form");
 const list = document.querySelector("#todo-list");
 const input = document.querySelector("#new-todo");
 
+// localStorageが使えない場合の保存先
+let tempData = [];
+
 // APIに似たものを作る
 const TASK_KEY = "todoList";
 
 // タスクの一覧を取得する
 const getTasks = () => {
-  const data = localStorage.getItem(TASK_KEY);
   try {
+    const data = localStorage.getItem(TASK_KEY);
     if (data) {
       const todos = JSON.parse(data);
       return todos;
@@ -16,13 +19,14 @@ const getTasks = () => {
     // データがない場合は空行列を返す。
     return [];
   } catch (e) {
-    throw new Error("Local Storage のデータが不正です");
+    // localStorageが使えない
+    return tempData;
   }
 };
 
 const windowGetTasks = () => {
-  const data = window.localStorage.getItem(TASK_KEY);
   try {
+    const data = window.localStorage.getItem(TASK_KEY);
     if (data) {
       const todos = JSON.parse(data);
       return todos;
@@ -30,7 +34,8 @@ const windowGetTasks = () => {
     // データがない場合は空行列を返す。
     return [];
   } catch (e) {
-    throw new Error("Local Storage のデータが不正です");
+    // localStorageが使えない
+    return tempData;
   }
 };
 
@@ -55,8 +60,13 @@ const createTask = (todo) => {
     status: "active",
   };
   newTasks.push(newTask);
-  localStorage.setItem(TASK_KEY, JSON.stringify(newTasks));
-  return newTask;
+  try {
+    localStorage.setItem(TASK_KEY, JSON.stringify(newTasks));
+    return newTask;
+  } catch (e) {
+    tempData = newTasks;
+    return newTask;
+  }
 };
 
 // タスクを一部更新する
@@ -66,7 +76,11 @@ const updateTask = (id, task) => {
   const taskIndex = tasks.findIndex((task) => task.id.toString() === id);
   const updatedTasks = [...tasks];
   updatedTasks[taskIndex] = task;
-  localStorage.setItem(TASK_KEY, JSON.stringify(updatedTasks));
+  try {
+    localStorage.setItem(TASK_KEY, JSON.stringify(updatedTasks));
+  } catch (e) {
+    tempData = updatedTasks;
+  }
 };
 
 // タスクを削除する
@@ -75,7 +89,11 @@ const deleteTask = (id) => {
   const taskIndex = tasks.findIndex((task) => task.id.toString() === id);
   const removedTasks = [...tasks];
   removedTasks.splice(taskIndex, 1);
-  localStorage.setItem(TASK_KEY, JSON.stringify(removedTasks));
+  try {
+    localStorage.setItem(TASK_KEY, JSON.stringify(removedTasks));
+  } catch (e) {
+    tempData = removedTasks;
+  }
 };
 
 window.addEventListener("storage", (e) => {
