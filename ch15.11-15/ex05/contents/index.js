@@ -98,12 +98,6 @@ const deleteTask = (id) => {
     const trans = db.transaction(storeName, "readwrite");
     const store = trans.objectStore(storeName);
     store.delete(id);
-
-    getAllReq.onsuccess = (event) => {
-      const tasks = event.target.result;
-      const key = tasks.findIndex((task) => task.id === id.toString());
-      store.delete(id);
-    };
   };
 };
 
@@ -169,7 +163,7 @@ function appendToDoItem(task) {
   toggle.addEventListener("change", async (e) => {
     const target = e.target;
     try {
-      getSpecificTask(target.id, (task) => {
+      getSpecificTask(Number(target.id), (task) => {
         const updatedData = { ...task };
         updatedData.status = target.checked ? "completed" : "active";
         updateTask(updatedData);
