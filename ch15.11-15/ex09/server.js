@@ -12,10 +12,10 @@ const wss = new WebSocketServer({ port });
 
 // ライフゲームのセル (true or false) をランダムに初期化する
 let grid = new Array(ROWS)
-.fill(null)
-.map(() =>
-  new Array(COLS).fill(null).map(() => !!Math.floor(Math.random() * 2))
-);
+  .fill(null)
+  .map(() =>
+    new Array(COLS).fill(null).map(() => !!Math.floor(Math.random() * 2))
+  );
 // 停止状態
 let paused = true;
 
@@ -62,6 +62,36 @@ function updateGrid(grid) {
     for (let col = 0; col < COLS; col++) {
       // 周囲のセルの生存数を数えて nextGrid[row][col] に true or false を設定する
       //（15.04-10.10の実装を利用）
+      // 周囲のセルの生存数を数えて nextGrid[row][col] に true or false を設定する (実装してね)
+      let surv = 0; // 生存数
+      for (let x = -1; x <= 1; x++) {
+        for (let y = -1; y <= 1; y++) {
+          if (
+            row + x >= 0 &&
+            row + x < ROWS &&
+            col + y >= 0 &&
+            col + y < COLS &&
+            !(x === 0 && y === 0)
+          ) {
+            surv += grid[row + x][col + y] ? 1 : 0;
+          }
+        }
+      }
+
+      // 誕生
+      //     死んでいるセルに隣接する生きたセルがちょうど3つあれば、次の世代が誕生する。
+      if (!grid[row][col] && surv === 3) {
+        nextGrid[row][col] = true;
+      }
+      // 生存
+      //     生きているセルに隣接する生きたセルが2つか3つならば、次の世代でも生存する。
+      else if (grid[row][col] && (surv === 2 || surv === 3)) {
+        nextGrid[row][col] = true;
+      }
+      // 過疎・過密
+      else {
+        nextGrid[row][col] = false;
+      }
     }
   }
   return nextGrid;
