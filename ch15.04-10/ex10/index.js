@@ -54,14 +54,14 @@ function updateGrid(grid) {
             row + x >= 0 &&
             row + x < ROWS &&
             col + y >= 0 &&
-            col + y < COLS
+            col + y < COLS &&
+            !(x === 0 && y === 0)
           ) {
-            surv = grid[row + x][col + y] ? surv + 1 : surv;
+            surv += grid[row + x][col + y] ? 1 : 0;
           }
         }
       }
 
-      nextGrid[row][col] = false;
       // 誕生
       //     死んでいるセルに隣接する生きたセルがちょうど3つあれば、次の世代が誕生する。
       if (!grid[row][col] && surv === 3) {
@@ -69,17 +69,11 @@ function updateGrid(grid) {
       }
       // 生存
       //     生きているセルに隣接する生きたセルが2つか3つならば、次の世代でも生存する。
-      else if (grid[row][col] && (surv === 3 || surv === 2)) {
+      else if (grid[row][col] && (surv === 2 || surv === 3)) {
         nextGrid[row][col] = true;
       }
-      // 過疎
-      //     生きているセルに隣接する生きたセルが1つ以下ならば、過疎により死滅する。
-      else if (grid[row][col] && surv <= 1) {
-        nextGrid[row][col] = false;
-      }
-      // 過密
-      //     生きているセルに隣接する生きたセルが4つ以上ならば、過密により死滅する。
-      else if (grid[row][col] && surv >= 4) {
+      // 過疎・過密
+      else {
         nextGrid[row][col] = false;
       }
     }
