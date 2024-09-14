@@ -10,7 +10,14 @@ socket.onerror = (error) => {
 //  メッセージ受信
 socket.onmessage = (event) => {
   // メッセージ送信
-  socket.send(`Hello, ${event.data}`);
+  try {
+    const req = JSON.parse(event.data);
+    const resp = { ...req };
+    resp.message = `Hello, ${req.message}`;
+    socket.send(JSON.stringify(resp));
+  } catch (e) {
+    throw new Error("リクエストの値が不正です。");
+  }
 };
 
 //  切断
