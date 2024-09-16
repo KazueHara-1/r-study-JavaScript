@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const resp = await fetch("http://localhost:3001/api/tasks", {
       method: "GET",
       mode: "cors",
+      credentials: "include",
     });
     if (!resp.status === 200) {
       const result = await resp.json();
@@ -40,6 +41,7 @@ form.addEventListener("submit", async (e) => {
     const resp = await fetch("http://localhost:3001/api/tasks", {
       method: "POST",
       mode: "cors",
+      credentials: "include",
       body: `{"name": "${todo}"}`,
     });
     if (!resp.status === 201) {
@@ -73,6 +75,7 @@ function appendToDoItem(task) {
       const resp = await fetch(`http://localhost:3001/api/tasks/${target.id}`, {
         method: "GET",
         mode: "cors",
+        credentials: "include",
       });
       if (resp.status !== 200) {
         const result = await resp.json();
@@ -86,6 +89,7 @@ function appendToDoItem(task) {
         {
           method: "PATCH",
           mode: "cors",
+          credentials: "include",
           body: JSON.stringify(updatedData),
         }
       );
@@ -110,6 +114,7 @@ function appendToDoItem(task) {
       const resp = await fetch(`http://localhost:3001/api/tasks/${target.id}`, {
         method: "DELETE",
         mode: "cors",
+        credentials: "include",
       });
       if (resp.status !== 204) {
         const result = await resp.json();
