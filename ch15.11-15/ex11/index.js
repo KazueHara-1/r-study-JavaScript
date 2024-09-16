@@ -13,15 +13,15 @@ class Tile {
   // 列に分割し、その矩形を覆うように、numRows*numCols 個の Tile オブジェクトを
   // 生成するジェネレータ。
   static *tiles(width, height, numRows, numCols) {
-    let columnWidth = Math.ceil(width / numCols);
-    let rowHeight = Math.ceil(height / numRows);
+    const columnWidth = Math.ceil(width / numCols);
+    const rowHeight = Math.ceil(height / numRows);
     for (let row = 0; row < numRows; row++) {
-      let tileHeight =
+      const tileHeight =
         row < numRows - 1
           ? rowHeight // 行の高さ。
           : height - rowHeight * (numRows - 1); // 最後の行の高さ。
       for (let col = 0; col < numCols; col++) {
-        let tileWidth =
+        const tileWidth =
           col < numCols - 1
             ? columnWidth // 列の幅。
             : width - columnWidth * (numCols - 1); // 最後の列の幅。
@@ -57,7 +57,7 @@ class WorkerPool {
     // 指定した数のワーカーを作成し、メッセージハンドラとエラーハンドラを
     // 追加し、idleWorkers 配列に保存する。
     for (let i = 0; i < numWorkers; i++) {
-      let worker = new Worker(workerSource);
+      const worker = new Worker(workerSource);
       worker.onmessage = (message) => {
         this._workerDone(worker, null, message.data);
       };
@@ -73,7 +73,7 @@ class WorkerPool {
   _workerDone(worker, error, response) {
     // この Worker の resolve() と reject() 関数を検索し、
     // マップからこのワーカーのエントリを削除する。
-    let [resolver, rejector] = this.workerMap.get(worker);
+    const [resolver, rejector] = this.workerMap.get(worker);
     this.workerMap.delete(worker);
     // キューに入っている仕事がなければ、このワーカーをアイドル状態の
     // ワーカーリストに戻す。キューに入っている仕事があれば、キューから
@@ -81,7 +81,7 @@ class WorkerPool {
     if (this.workQueue.length === 0) {
       this.idleWorkers.push(worker);
     } else {
-      let [work, resolver, rejector] = this.workQueue.shift();
+      const [work, resolver, rejector] = this.workQueue.shift();
       this.workerMap.set(worker, [resolver, rejector]);
       worker.postMessage(work);
     }
@@ -96,7 +96,7 @@ class WorkerPool {
   addWork(work) {
     return new Promise((resolve, reject) => {
       if (this.idleWorkers.length > 0) {
-        let worker = this.idleWorkers.pop();
+        const worker = this.idleWorkers.pop();
         this.workerMap.set(worker, [resolve, reject]);
         worker.postMessage(work);
       } else {
@@ -123,7 +123,7 @@ class WorkerPool {
 class PageState {
   // このファクトリメソッドは、全体を表示するために初期状態を返す。
   static initialState() {
-    let s = new PageState();
+    const s = new PageState();
     s.cx = -0.5;
     s.cy = 0;
     s.perPixel = 3 / window.innerHeight;
@@ -133,8 +133,8 @@ class PageState {
   // このファクトリメソッドは URL から状態を取得する。URL から有効な状態が
   // 取得できなかった場合は、null を返す。
   static fromURL(url) {
-    let s = new PageState();
-    let u = new URL(url); // URL の検索パラメータを使って状態を初期化する。
+    const s = new PageState();
+    const u = new URL(url); // URL の検索パラメータを使って状態を初期化する。
     s.cx = parseFloat(u.searchParams.get("cx"));
     s.cy = parseFloat(u.searchParams.get("cy"));
     s.perPixel = parseFloat(u.searchParams.get("pp"));
@@ -150,7 +150,7 @@ class PageState {
   // このインスタンスメソッドは、現在の状態をブラウザの現在のロケーションの
   // 検索パラメータにエンコードする。
   toURL() {
-    let u = new URL(window.location);
+    const u = new URL(window.location);
     u.searchParams.set("cx", this.cx);
     u.searchParams.set("cy", this.cy);
     u.searchParams.set("pp", this.perPixel);
@@ -214,7 +214,7 @@ class MandelbrotCanvas {
     if (typeof f === "function") {
       f(this.state);
     } else {
-      for (let property in f) {
+      for (const property in f) {
         this.state[property] = f[property];
       }
     }
@@ -242,13 +242,13 @@ class MandelbrotCanvas {
       return; // 現時点ではこれ以上何もしない。
     }
     // 状態変数を取得して、canvas の左上隅の複素数を計算する。
-    let { cx, cy, perPixel, maxIterations } = this.state;
-    let x0 = cx - (perPixel * this.width) / 2;
-    let y0 = cy - (perPixel * this.height) / 2;
+    const { cx, cy, perPixel, maxIterations } = this.state;
+    const x0 = cx - (perPixel * this.width) / 2;
+    const y0 = cy - (perPixel * this.height) / 2;
     // ROWS*COLS の Tile それぞれに対して、mandelbrotWorker.js のコードに
     // 対するメッセージを引数にして addWork() を呼び出す。戻り値の Promise
     // オブジェクトを配列に保管する。
-    let promises = this.tiles.map((tile) =>
+    const promises = this.tiles.map((tile) =>
       this.workerPool.addWork({
         tile: tile,
         x0: x0 + tile.x * perPixel,
@@ -268,7 +268,7 @@ class MandelbrotCanvas {
         // 求める。この数値は、ピクセルに色を割り当てるために必要になる。
         let min = maxIterations,
           max = 0;
-        for (let r of responses) {
+        for (const r of responses) {
           if (r.min < min) min = r.min;
           if (r.max > max) max = r.max;
         }
@@ -299,7 +299,7 @@ class MandelbrotCanvas {
           // 最小値と最大値が異なる一般的な場合は、対数スケールを
           // 使って、各反復回数に 0～255 の不透明度を割り当て、
           // 左シフト演算子を使ってピクセル値に変換する。
-          let maxlog = Math.log(1 + max - min);
+          const maxlog = Math.log(1 + max - min);
           for (let i = min; i <= max; i++) {
             this.colorTable[i] =
               Math.ceil((Math.log(1 + i - min) / maxlog) * 255) << 24;
@@ -307,8 +307,8 @@ class MandelbrotCanvas {
         }
         // ここで、各レスポンスの ImageData 中の反復回数を
         // colorTable の色に変換する。
-        for (let r of responses) {
-          let iterations = new Uint32Array(r.imageData.data.buffer);
+        for (const r of responses) {
+          const iterations = new Uint32Array(r.imageData.data.buffer);
           for (let i = 0; i < iterations.length; i++) {
             iterations[i] = this.colorTable[iterations[i]];
           }
@@ -318,7 +318,7 @@ class MandelbrotCanvas {
         // イベントハンドラによって設定されている可能性のある canvas 上の
         // CSS トランスフォームをすべて削除する）。
         this.canvas.style.transform = "";
-        for (let r of responses) {
+        for (const r of responses) {
           this.context.putImageData(r.imageData, r.tile.x, r.tile.y);
         }
       })
@@ -405,7 +405,7 @@ class MandelbrotCanvas {
     // これは move イベント用のハンドラ。
     const pointerMoveHandler = (event) => {
       // ポインタがどれだけ動いて、どれだけの時間が経過したのか？
-      let dx = event.clientX - x0,
+      const dx = event.clientX - x0,
         dy = event.clientY - y0,
         dt = Date.now() - t0;
       // ポインタが十分に移動していたり、十分に時間が経過していたりして、
@@ -437,8 +437,8 @@ class MandelbrotCanvas {
         this.setState({ cx: cx - dx * perPixel, cy: cy - dy * perPixel });
       } else {
         // ユーザがクリックした。中心点が何ピクセル移動したかを計算する。
-        let cdx = x0 - this.width / 2;
-        let cdy = y0 - this.height / 2;
+        const cdx = x0 - this.width / 2;
+        const cdy = y0 - this.height / 2;
         // CSS を使って素早く一時的にズームインする。
         this.canvas.style.transform = `translate(${-cdx * 2}px, ${
           -cdy * 2
@@ -459,7 +459,7 @@ class MandelbrotCanvas {
 }
 // 最後に、canvas を設定する。なお、この JavaScript ファイルは自己完結している。
 // HTML ファイルには、<script>タグだけを記述すればよい。
-let canvas = document.createElement("canvas"); // canvas 要素を作成する。
+const canvas = document.createElement("canvas"); // canvas 要素を作成する。
 document.body.append(canvas); // ボディに挿入する。
 document.body.style = "margin:0"; // ボディのマージンをゼロに。
 canvas.style.width = "100%"; // canvas の幅をボディと同じにする。
