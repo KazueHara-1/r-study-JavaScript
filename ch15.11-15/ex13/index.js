@@ -6,7 +6,7 @@ const addChatStyle = (item) => {
   return item;
 };
 
-const onClickSubmitBtn = () => {
+const onClickSubmitBtn = async () => {
   const chatArea = document.getElementById("chat-area");
   const input = document.getElementById("input");
   const inputText = input.value;
@@ -26,29 +26,37 @@ const onClickSubmitBtn = () => {
         content: inputText,
       },
     ],
-    stream: false,
+    stream: true,
   };
 
-  fetch(url, {
+  const response = await fetch(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(data),
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      const inputText = data.message.content;
-      const res = document.createElement("p");
-      res.class = "chat-item";
-      res.textContent = inputText;
-      res.style.backgroundColor = "palegreen";
-      res.style.marginRight = "auto";
-      chatArea.appendChild(addChatStyle(res));
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-    });
+  });
+  const res = document.createElement("p");
+  res.class = "chat-item";
+  res.textContent = "";
+  res.style.backgroundColor = "palegreen";
+  res.style.marginRight = "auto";
+  chatArea.appendChild(addChatStyle(res));
+
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder("utf-8"); // バイトデータをテキストに変換する。
+  while (true) {
+    // 下に抜けるまでループ。
+    const { done, value } = await reader.read(); // チャンクを読み出す。
+    if (value) {
+      const respJson = JSON.parse(decoder.decode(value, { stream: true }));
+      res.textContent += respJson.message.content;
+    }
+    if (done) {
+      // これが最後のチャンクなら、
+      break; // ループを抜ける。
+    }
+  }
 };
 
 const submit = document.getElementById("submit");
