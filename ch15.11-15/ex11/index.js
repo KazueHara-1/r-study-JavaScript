@@ -172,7 +172,7 @@ class MandelbrotCanvas {
     // canvas を保存し、コンテキストオブジェクトを取得し、WorkerPool を初期化する。
     this.canvas = canvas;
     this.context = canvas.getContext("2d");
-    this.workerPool = new WorkerPool(NUMWORKERS, "mandelbrotWorker.js");
+    this.workerPool = new WorkerPool(NUMWORKERS, "gasket.js");
     // 後で使用するいくつかのプロパティを定義する。
     this.tiles = null; // canvas の中の矩形。
     this.pendingRender = null; // 現在は描画していない。
@@ -248,15 +248,25 @@ class MandelbrotCanvas {
     // ROWS*COLS の Tile それぞれに対して、mandelbrotWorker.js のコードに
     // 対するメッセージを引数にして addWork() を呼び出す。戻り値の Promise
     // オブジェクトを配列に保管する。
-    const promises = this.tiles.map((tile) =>
+    // const promises = this.tiles.map((tile) =>
+    //   this.workerPool.addWork({
+    //     tile: tile,
+    //     x0: x0 + tile.x * perPixel,
+    //     y0: y0 + tile.y * perPixel,
+    //     perPixel: perPixel,
+    //     maxIterations: maxIterations,
+    //   })
+    // );
+    const tile = this.tiles[0];
+    const promises = [
       this.workerPool.addWork({
         tile: tile,
         x0: x0 + tile.x * perPixel,
         y0: y0 + tile.y * perPixel,
         perPixel: perPixel,
         maxIterations: maxIterations,
-      })
-    );
+      }),
+    ];
     // Promise.all() を使って、Promise の配列からレスポンスの配列を取得
     // する。各レスポンスは、各 Tile に対する計算結果。mandelbrotWorker.js の
     // コードを思い出せば、各レスポンスには、Tile オブジェクト、ピクセル値の代わりに
