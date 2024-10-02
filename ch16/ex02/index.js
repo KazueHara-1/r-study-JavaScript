@@ -29,5 +29,23 @@ async function startChild() {
     });
   });
 }
+process.on("SIGINT", () => {
+  console.log("receive SIGINT signal.");
+  process.kill(child.pid);
+  process.exit(0);
+});
 
-// TODO: ここに処理を書く
+process.on("SIGTERM", () => {
+  console.log("receive SIGTERM signal.");
+  process.kill(child.pid);
+  process.exit(0);
+});
+
+while (true) {
+  const resp = await startChild();
+  if (resp[0] === 0) {
+    // 正常終了なので処理を抜ける
+    break;
+  }
+  console.log("Retry");
+}
