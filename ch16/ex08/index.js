@@ -10,17 +10,6 @@ const OWNER = "KazueHara-1";
 const REPO = "r-study-JavaScript";
 let isVerbose = false;
 
-// const rl = createInterface({
-//   input: process.stdin,
-//   output: process.stdout,
-// });
-
-// rl.question("Please enter names for your project: ", (answer) => {
-//   console.log(`Thank you!! Let's start ${answer}`);
-
-//   rl.close();
-// });
-
 if (!cmd) {
   console.error("Please pass one argument!!");
   process.exit(1);
