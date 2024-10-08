@@ -20,7 +20,9 @@
     // import React from "react"; のようなインポートを許可する
     "allowSyntheticDefaultImports": true,
     // JSを許可
-    "allowJs": true
+    "allowJs": true,
+    // supertestのために追加
+    "esModuleInterop": true
   },
   // package.jsonでtype: "module"を指定しているので、ts-nodeで実行する場合もesmである必要がある
   "ts-node": {

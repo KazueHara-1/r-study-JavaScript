@@ -2,6 +2,7 @@ import { resolve, extname } from "path"; // ファイルシステムのパス操
 import { createReadStream } from "fs"; // ファイル読み込み用。
 import express from "express";
 const app = express();
+module.exports = app;
 
 const server = app.listen(3000, function () {
   console.log("Node.js is listening to PORT:" + server.address().port);
