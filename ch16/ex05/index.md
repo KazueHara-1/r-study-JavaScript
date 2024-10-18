@@ -24,3 +24,5 @@
 | `node cat.mjs file > output.txt`         | `file` の内容が`output.txt`に出力される。                                        | `stdin is not a tty` (対話モードにできない旨のエラー) と出力される。 (`fs.createReadStream(file).pipe(process.stdout);` となるせい…？) |
 | `node cat.mjs invalid-file > output.txt` | createReadStreamの引数が存在しないファイルなので、エラーとなる。                 | `stdin is not a tty` (対話モードにできない旨のエラー) と出力される。                                                                   |
 | `node cat.mjs invalid-file 2> error.txt` | createReadStreamの引数が存在しないファイルなので、エラーとなる。                 | `Error: ENOENT: no such file or directory,...` と、エラーがコンソールに出力される。                                                    |
+
+補足: Power Shellで実行するとerror.txtに正常に書き込まれた
