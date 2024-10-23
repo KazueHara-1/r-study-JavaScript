@@ -1,4 +1,6 @@
 // 後で見直す
+// 基本的な部分は同じ
+// 初めにワーカーを用意してワーカーへ（画像の縦横サイズも一緒に）画像を渡す
 
 const threads = require("worker_threads");
 const fs = require("fs");

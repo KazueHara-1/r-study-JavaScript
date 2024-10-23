@@ -152,3 +152,7 @@ switch (cmd) {
     isVerbose = true;
     break;
 }
+
+// メモ:
+// const createCommand = new Command();
+// でもできる？
