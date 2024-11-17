@@ -7,15 +7,17 @@
   "scripts": {
     "format": "prettier --write \"./**/*.{js,jsx,ts,tsx}\"",
     "lint": "eslint .",
-    "test": "test"
+    "test": "jest --runInBand"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@octokit/core": "^6.1.2",
     "eslint": "^9.14.0",
     "eslint-config-google": "^0.14.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
+    "jsdom": "^25.0.1",
     "prettier": "^3.3.3"
   }
 }
