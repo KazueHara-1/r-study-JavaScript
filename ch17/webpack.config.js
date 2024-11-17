@@ -6,6 +6,8 @@ const isProduction = process.env.NODE_ENV == "production";
 
 const config = {
   entry: "./ex05/index.js",
+  // ソースマップを生成する
+  devtool: "source-map",
   output: {
     path: path.resolve(__dirname, "dist"),
   },
