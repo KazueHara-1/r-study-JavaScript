@@ -331,7 +331,14 @@ export default [
       // 'template-curly-spacing': 'off',
       "yield-star-spacing": ["error", "after"],
     },
-    extends: ["prettier"],
+    extends: ["prettier", "plugin:flowtype/recommended"],
+    plugins: ["flowtype"],
+    parser: "babel-eslint",
     ignores: ["./ex01/format_sample.js"],
+    settings: {
+      flowtype: {
+        onlyFilesWithFlowAnnotation: true,
+      },
+    },
   },
 ];
