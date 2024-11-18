@@ -30,6 +30,9 @@
     "jsdom": "^25.0.1",
     "prettier": "^3.3.3",
     "ts-jest": "^29.2.5",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3",
     "webpack": "^5.96.1",
     "webpack-cli": "^5.1.4"
   }
