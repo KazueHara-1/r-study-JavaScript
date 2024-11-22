@@ -9,10 +9,10 @@ const OWNER = "KazueHara-1";
 const REPO = "r-study-JavaScript";
 let isVerbose = false;
 
-if (!cmd) {
-  console.error("Please pass one argument!!");
-  process.exit(1);
-}
+// if (!cmd) {
+//   console.error("Please pass one argument!!");
+//   process.exit(1);
+// }
 
 export const createIssue = async (title, body) => {
   const octokit = new Octokit({
