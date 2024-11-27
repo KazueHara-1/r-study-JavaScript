@@ -1,6 +1,6 @@
 // Generated using webpack-cli https://github.com/webpack/webpack-cli
 
-const path = require("path");
+import { resolve } from "path";
 
 const isProduction = process.env.NODE_ENV == "production";
 
@@ -9,7 +9,7 @@ const config = {
   // ソースマップを生成する
   devtool: "source-map",
   output: {
-    path: path.resolve(__dirname, "dist"),
+    path: resolve(__dirname, "dist"),
   },
   devServer: {
     open: true,
@@ -36,7 +36,7 @@ const config = {
   },
 };
 
-module.exports = () => {
+export default () => {
   if (isProduction) {
     config.mode = "production";
   } else {
