@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>業務時間管理</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>業務時間管理</h1>
+
+      <!-- 業務開始と終了ボタン -->
+      <div class="buttons">
+        <button id="startButton" onclick="startWork()">業務開始</button>
+        <button id="endButton" onclick="endWork()" disabled>業務終了</button>
+      </div>
+
+      <!-- 円形進捗バー -->
+      <div class="progress-container">
+        <svg width="200" height="200">
+          <circle
+            cx="100"
+            cy="100"
+            r="90"
+            stroke="#e6e6e6"
+            stroke-width="10"
+            fill="none"
+          ></circle>
+          <circle
+            id="progressRing"
+            cx="100"
+            cy="100"
+            r="90"
+            stroke="#4caf50"
+            stroke-width="10"
+            fill="none"
+            stroke-dasharray="565.48"
+            stroke-dashoffset="0"
+          ></circle>
+        </svg>
+        <div id="progressText">今月の残業時間: 0時間</div>
+      </div>
+
+      <!-- 編集ボタン -->
+      <div class="edit-button">
+        <button onclick="editPastTimes()">過去の業務時間を編集</button>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
