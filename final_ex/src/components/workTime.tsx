@@ -3,8 +3,10 @@
 import React, { useState } from "react";
 import { DateTime } from "luxon";
 import TimePickerDialog from "./timePickerDialog";
+import { Slider } from "@mui/material";
 
 const WorkTime = () => {
+  const defaultWorkTime = 7.5; // 7.5h
   const defaultStartTime = DateTime.now().set({
     hour: 9,
     minute: 0,
@@ -17,17 +19,30 @@ const WorkTime = () => {
     second: 0,
     millisecond: 0,
   });
+  const [workTime, setWorkTime] = useState(defaultWorkTime);
+  const [overtime, setOvertime] = useState(0);
   const [start, setStart] = useState(defaultStartTime);
   const [end, setEnd] = useState(defaultEndTime);
   const [isTimePicaDialogVisible, setIsTimePicaDialogVisible] = useState(false);
 
+  const convertHMin = (time: number) => {
+    return `${Math.trunc(time)}h${(time - Math.trunc(time)) * 60}min`;
+  };
+
+  const onChangeSlider = (event: Event, value: number | Array<number>) => {
+    if (typeof value !== "object") {
+      setOvertime(value / 60);
+    }
+  };
+
   return (
     <>
       <div className="text-center m-2">
-        本日の業務予定
-        <br />
-        {start.toFormat("HH:mm")}～{end.toFormat("HH:mm")}
-        <br />
+        <p>本日の業務予定時間</p>
+        <p>
+          {start.toFormat("HH:mm")}～{end.toFormat("HH:mm")} (
+          {convertHMin(workTime - 1)})
+        </p>
         <button
           className="bg-blue-500 text-white cursor-pointer text-sm px-4 py-2 rounded-md border-none"
           onClick={() => {
@@ -46,8 +61,19 @@ const WorkTime = () => {
         onChange={(e) => {
           if (e) {
             setStart(e);
+            setEnd(e.plus({ hours: defaultWorkTime + 1 }));
           }
         }}
+      />
+      <p className="text-center">今月の残業時間: {convertHMin(overtime)}</p>
+      <p className="text-center">残業時間を調整</p>
+      <Slider
+        valueLabelDisplay="off"
+        onChange={onChangeSlider}
+        defaultValue={0}
+        min={-120}
+        max={300}
+        step={15}
       />
     </>
   );
