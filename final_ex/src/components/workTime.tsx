@@ -7,6 +7,7 @@ import { Slider } from "@mui/material";
 
 const WorkTime = () => {
   const defaultWorkTime = 7.5 * 60; // 7.5h
+  const defaultThisMonthsOvertime = 60;
   const defaultStartTime = DateTime.now().set({
     hour: 9,
     minute: 0,
@@ -22,23 +23,29 @@ const WorkTime = () => {
   // 時間の単位は min
   const [workTime, setWorkTime] = useState(defaultWorkTime);
   const [overtime, setOvertime] = useState(0);
+  const [TodaysOvertime, setTodaysOvertime] = useState(0);
   const [start, setStart] = useState(defaultStartTime);
   const [end, setEnd] = useState(defaultEndTime);
   const [isTimePicaDialogVisible, setIsTimePicaDialogVisible] = useState(false);
 
   const convertHMin = (min: number) => {
+    if (min < 0) {
+      return `-${Math.trunc((-1 * min) / 60)}h${(-1 * min) % 60}min`;
+    }
     return `${Math.trunc(min / 60)}h${min % 60}min`;
   };
 
   const onChangeSlider = (event: Event, value: number | Array<number>) => {
     if (typeof value !== "object") {
-      setOvertime(value);
+      setTodaysOvertime(value);
+      setOvertime(defaultThisMonthsOvertime + value);
+      setWorkTime(defaultWorkTime + value);
     }
   };
 
   return (
     <>
-      <div className="text-center m-2">
+      <div className="text-center m-2 w-56">
         <p>本日の業務予定時間</p>
         <p>
           {start.toFormat("HH:mm")}～{end.toFormat("HH:mm")} (
@@ -67,12 +74,15 @@ const WorkTime = () => {
           }
         }}
       />
-      <p className="text-center">今月の残業時間: {convertHMin(overtime)}</p>
+      <p className="text-center">今月の残り残業時間: {convertHMin(overtime)}</p>
+      <p className="text-center">
+        本日の残業時間: {convertHMin(TodaysOvertime)}
+      </p>
       <p className="text-center">残業時間を調整</p>
       <Slider
         valueLabelDisplay="off"
         onChange={onChangeSlider}
-        defaultValue={0}
+        value={TodaysOvertime}
         min={-120}
         max={300}
         step={15}
