@@ -6,7 +6,7 @@ import TimePickerDialog from "./timePickerDialog";
 import { Slider } from "@mui/material";
 
 const WorkTime = () => {
-  const defaultWorkTime = 7.5; // 7.5h
+  const defaultWorkTime = 7.5 * 60; // 7.5h
   const defaultStartTime = DateTime.now().set({
     hour: 9,
     minute: 0,
@@ -19,19 +19,20 @@ const WorkTime = () => {
     second: 0,
     millisecond: 0,
   });
+  // 時間の単位は min
   const [workTime, setWorkTime] = useState(defaultWorkTime);
   const [overtime, setOvertime] = useState(0);
   const [start, setStart] = useState(defaultStartTime);
   const [end, setEnd] = useState(defaultEndTime);
   const [isTimePicaDialogVisible, setIsTimePicaDialogVisible] = useState(false);
 
-  const convertHMin = (time: number) => {
-    return `${Math.trunc(time)}h${(time - Math.trunc(time)) * 60}min`;
+  const convertHMin = (min: number) => {
+    return `${Math.trunc(min / 60)}h${min % 60}min`;
   };
 
   const onChangeSlider = (event: Event, value: number | Array<number>) => {
     if (typeof value !== "object") {
-      setOvertime(value / 60);
+      setOvertime(value);
     }
   };
 
@@ -41,7 +42,7 @@ const WorkTime = () => {
         <p>本日の業務予定時間</p>
         <p>
           {start.toFormat("HH:mm")}～{end.toFormat("HH:mm")} (
-          {convertHMin(workTime - 1)})
+          {convertHMin(workTime)})
         </p>
         <button
           className="bg-blue-500 text-white cursor-pointer text-sm px-4 py-2 rounded-md border-none"
@@ -61,7 +62,8 @@ const WorkTime = () => {
         onChange={(e) => {
           if (e) {
             setStart(e);
-            setEnd(e.plus({ hours: defaultWorkTime + 1 }));
+            // 休憩1h(60min)を加算
+            setEnd(e.plus({ minutes: defaultWorkTime + 60 }));
           }
         }}
       />
