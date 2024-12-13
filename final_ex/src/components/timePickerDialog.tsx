@@ -37,7 +37,11 @@ const TimePickerDialog = ({
         <DialogTitle>業務開始時間</DialogTitle>
         <div className="m-4">
           <LocalizationProvider dateAdapter={AdapterLuxon}>
-            <TimePicker onChange={onChange} defaultValue={defaultValue} />
+            <TimePicker
+              ampm={false}
+              onChange={onChange}
+              defaultValue={defaultValue}
+            />
           </LocalizationProvider>
           <br />
           <Button className="mt-2 ml-auto block" onClick={onClose}>

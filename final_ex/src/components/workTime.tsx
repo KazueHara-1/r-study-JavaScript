@@ -40,6 +40,7 @@ const WorkTime = () => {
       setTodaysOvertime(value);
       setOvertime(defaultThisMonthsOvertime + value);
       setWorkTime(defaultWorkTime + value);
+      setEnd(start.plus({ minutes: defaultWorkTime + value + 60 }));
     }
   };
 
@@ -70,7 +71,7 @@ const WorkTime = () => {
           if (e) {
             setStart(e);
             // 休憩1h(60min)を加算
-            setEnd(e.plus({ minutes: defaultWorkTime + 60 }));
+            setEnd(e.plus({ minutes: workTime + 60 }));
           }
         }}
       />
@@ -83,8 +84,8 @@ const WorkTime = () => {
         valueLabelDisplay="off"
         onChange={onChangeSlider}
         value={TodaysOvertime}
-        min={-120}
-        max={300}
+        min={-210}
+        max={450}
         step={15}
       />
     </>
