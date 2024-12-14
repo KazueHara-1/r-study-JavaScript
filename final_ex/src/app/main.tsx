@@ -8,6 +8,7 @@ import { DateTime } from "luxon";
 import { Slider } from "@mui/material";
 import TimePickerDialog from "@/components/timePickerDialog";
 import { convertHMin } from "@/utils/convertHMin";
+import SaveOvertime from "@/components/saveOvertime";
 
 // main で主なstateをすべて管理する
 
@@ -34,6 +35,7 @@ export default function Main() {
   const [end, setEnd] = useState(defaultEndTime);
   const [isTimePickerDialogVisible, setIsTimePickerDialogVisible] =
     useState(false);
+  const [isSnackbarVisible, setIsSnackbarVisible] = useState(false);
 
   const changeOvertime = useCallback(
     (event: Event, value: number | Array<number>) => {
@@ -88,9 +90,21 @@ export default function Main() {
           max={450}
           step={15}
         />
-        <Circle>
-          <Clock />
-        </Circle>
+        <div className="flex justify-center">
+          <Circle>
+            <Clock />
+          </Circle>
+        </div>
+        <SaveOvertime
+          handleClose={() => {
+            setIsSnackbarVisible(false);
+          }}
+          isOpen={isSnackbarVisible}
+          overtime={overtime}
+          showSnackBar={() => {
+            setIsSnackbarVisible(true);
+          }}
+        />
       </div>
     </main>
   );

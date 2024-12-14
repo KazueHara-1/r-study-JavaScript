@@ -4,7 +4,7 @@ import { twMerge } from "tailwind-merge";
 interface ButtonProps {
   type?: "normal" | "submit";
   children: ReactNode;
-  className: string;
+  className?: string;
   onClick: () => void;
 }
 
@@ -18,7 +18,7 @@ const Button = ({
     className,
     type === "normal" && "bg-blue-500",
     type === "submit" && "bg-green-600",
-    "text-white cursor-pointer text-sm px-4 py-2 rounded-md border-none"
+    "text-white text-sm px-4 py-2 rounded-md border-none"
   );
   return (
     <button className={mergedClassName} onClick={onClick}>

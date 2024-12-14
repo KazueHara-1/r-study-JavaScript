@@ -1,6 +1,7 @@
 import React from "react";
 import { DateTime } from "luxon";
 import { convertHMin } from "@/utils/convertHMin";
+import Button from "./button";
 
 interface WorkTimeProps {
   start: DateTime<true>;
@@ -23,12 +24,7 @@ const WorkTime = ({
           {start.toFormat("HH:mm")}～{end.toFormat("HH:mm")} (
           {convertHMin(workTime)})
         </p>
-        <button
-          className="bg-blue-500 text-white cursor-pointer text-sm px-4 py-2 rounded-md border-none"
-          onClick={openTimePickerDialog}
-        >
-          時間を編集
-        </button>
+        <Button onClick={openTimePickerDialog}>時間を編集</Button>
       </div>
     </>
   );
