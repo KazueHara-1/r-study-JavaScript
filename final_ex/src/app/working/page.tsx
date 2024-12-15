@@ -50,9 +50,32 @@ export default function Home() {
     },
     [defaultThisMonthsOvertime, defaultWorkTime, start]
   );
+
   const openTimePickerDialog = useCallback(() => {
     setIsTimePickerDialogVisible(true);
   }, []);
+
+  const totalWorkingTimeNow = () => {
+    const now = DateTime.now();
+    // デバッグ用
+    // const now = DateTime.now().set({ hour: 17, minute: 20 });
+    const lunch = DateTime.now().set({ hour: 12, minute: 0, second: 0 });
+    const diffLunch = now.diff(lunch, "minutes");
+    const diffLunchMin = diffLunch.get("minutes");
+    const diff = now.diff(start, "minutes");
+    let diffMin;
+    if (diffLunchMin < 0) {
+      diffMin = diff.get("minutes");
+    } else if (60 < diffLunchMin) {
+      diffMin = diff.get("minutes") - 60;
+    } else {
+      diffMin = diff.get("minutes") - diffLunchMin;
+    }
+    if (diffMin < 0) {
+      return 0;
+    }
+    return diffMin / workTime;
+  };
 
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
@@ -94,7 +117,7 @@ export default function Home() {
             step={15}
           />
           <div className="flex justify-center">
-            <Circle percent={20}>
+            <Circle percent={totalWorkingTimeNow()}>
               <Clock />
             </Circle>
           </div>
