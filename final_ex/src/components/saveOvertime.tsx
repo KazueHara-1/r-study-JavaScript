@@ -1,6 +1,7 @@
 import React from "react";
 import Button from "./button";
 import { Alert, Snackbar } from "@mui/material";
+import { OVERTIME_KEY } from "@/utils/const";
 
 interface SaveOvertimeProps {
   handleClose: () => void;
@@ -21,7 +22,7 @@ const saveOvertime = ({
         className="m-2"
         type="submit"
         onClick={() => {
-          localStorage.setItem("js-study-overtime", overtime.toString());
+          localStorage.setItem(OVERTIME_KEY, overtime.toString());
           showSnackBar();
         }}
       >
