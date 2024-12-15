@@ -10,10 +10,13 @@ import TimePickerDialog from "@/components/timePickerDialog";
 import WorkTime from "@/components/workTime";
 import { convertHMin } from "@/utils/convertHMin";
 import { Slider } from "@mui/material";
+import { OVERTIME_KEY } from "@/utils/const";
 
 export default function Home() {
   const defaultWorkTime = 7.5 * 60; // 7.5h
-  const defaultThisMonthsOvertime = 60;
+  const defaultThisMonthsOvertime = localStorage.getItem(OVERTIME_KEY)
+    ? Number(localStorage.getItem(OVERTIME_KEY))
+    : 0;
   const defaultStartTime = DateTime.now().set({
     hour: 9,
     minute: 0,
@@ -28,7 +31,7 @@ export default function Home() {
   });
   // 時間の単位は min
   const [workTime, setWorkTime] = useState(defaultWorkTime);
-  const [overtime, setOvertime] = useState(0);
+  const [overtime, setOvertime] = useState(defaultThisMonthsOvertime);
   const [TodaysOvertime, setTodaysOvertime] = useState(0);
   const [start, setStart] = useState(defaultStartTime);
   const [end, setEnd] = useState(defaultEndTime);
@@ -45,7 +48,7 @@ export default function Home() {
         setEnd(start.plus({ minutes: defaultWorkTime + value + 60 }));
       }
     },
-    [defaultWorkTime, start]
+    [defaultThisMonthsOvertime, defaultWorkTime, start]
   );
   const openTimePickerDialog = useCallback(() => {
     setIsTimePickerDialogVisible(true);
