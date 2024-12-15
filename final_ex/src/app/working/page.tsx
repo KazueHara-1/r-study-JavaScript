@@ -3,13 +3,13 @@
 import Image from "next/image";
 import { DateTime } from "luxon";
 import { useState, useCallback } from "react";
+import { Slider } from "@mui/material";
 import Circle from "@/components/circle";
 import Clock from "@/components/clock";
 import SaveOvertime from "@/components/saveOvertime";
 import TimePickerDialog from "@/components/timePickerDialog";
 import WorkTime from "@/components/workTime";
 import { convertHMin } from "@/utils/convertHMin";
-import { Slider } from "@mui/material";
 import { OVERTIME_KEY } from "@/utils/const";
 
 export default function Home() {
@@ -94,7 +94,7 @@ export default function Home() {
             step={15}
           />
           <div className="flex justify-center">
-            <Circle>
+            <Circle percent={20}>
               <Clock />
             </Circle>
           </div>
