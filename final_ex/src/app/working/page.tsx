@@ -1,8 +1,11 @@
 "use client";
 
+// TODO:
+// ・リアルタイムで勤務グラフが更新される
+
 import Image from "next/image";
 import { DateTime } from "luxon";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Slider } from "@mui/material";
 import Circle from "@/components/circle";
 import Clock from "@/components/clock";
@@ -33,6 +36,7 @@ export default function Home() {
   const [workTime, setWorkTime] = useState(defaultWorkTime);
   const [overtime, setOvertime] = useState(defaultThisMonthsOvertime);
   const [TodaysOvertime, setTodaysOvertime] = useState(0);
+  const [percent, setPercent] = useState(0);
   const [start, setStart] = useState(defaultStartTime);
   const [end, setEnd] = useState(defaultEndTime);
   const [isTimePickerDialogVisible, setIsTimePickerDialogVisible] =
@@ -77,6 +81,13 @@ export default function Home() {
     return diffMin / workTime;
   };
 
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setPercent(totalWorkingTimeNow());
+    }, 1000);
+    return () => clearInterval(intervalId);
+  }, []);
+
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-8 row-start-2 sm:items-start">
@@ -117,7 +128,7 @@ export default function Home() {
             step={15}
           />
           <div className="flex justify-center">
-            <Circle percent={totalWorkingTimeNow()}>
+            <Circle percent={percent}>
               <Clock />
             </Circle>
           </div>
