@@ -102,7 +102,7 @@ export default function Home() {
   }, [lunchTime, start, workTime]);
   const bgClassName = twMerge(
     "grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]",
-    isBreak && "bg-[#FFEFD5]"
+    (isBreak || 1 < percent) && "bg-[#FFEFD5]"
   );
 
   return (
@@ -167,6 +167,11 @@ export default function Home() {
               <Clock />
             </Circle>
           </div>
+          {1 < percent && (
+            <p className="text-center font-bold py-4 text-3xl">
+              本日もお疲れさまでした！
+            </p>
+          )}
           <SaveOvertime
             handleClose={() => {
               setIsSnackbarVisible(false);

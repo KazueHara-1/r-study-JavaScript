@@ -12,7 +12,7 @@ const Circle = ({ isBreak, percent, children }: CircleProps) => {
     return (
       <div
         id="dynamic-circle"
-        className="relative w-[200px] h-[200px] rounded-[50%] before:absolute before:w-[140px] before:h-[140px] before:bg-white before:rounded-[50%] before:left-[30px] before:top-[30px] flex justify-center items-center"
+        className="relative w-[200px] h-[200px] rounded-[50%] before:absolute before:w-[140px] before:h-[140px] before:bg-[#FFEFD5] before:rounded-[50%] before:left-[30px] before:top-[30px] flex justify-center items-center"
         style={{
           backgroundImage: `conic-gradient(#F08080 0deg ${deg}deg, lightgray ${deg}deg 360deg)`,
         }}
@@ -37,7 +37,7 @@ const Circle = ({ isBreak, percent, children }: CircleProps) => {
   return (
     <div
       id="dynamic-circle"
-      className="relative w-[200px] h-[200px] rounded-[50%] before:absolute before:w-[140px] before:h-[140px] before:bg-white before:rounded-[50%] before:left-[30px] before:top-[30px] flex justify-center items-center"
+      className="relative w-[200px] h-[200px] rounded-[50%] before:absolute before:w-[140px] before:h-[140px] before:bg-[#FFEFD5] before:rounded-[50%] before:left-[30px] before:top-[30px] flex justify-center items-center"
       style={{
         backgroundImage: `conic-gradient(#28a745 0deg 360deg)`,
       }}

@@ -18,7 +18,7 @@ const WorkTime = ({
 }: WorkTimeProps) => {
   return (
     <>
-      <div className="text-center m-2 w-56">
+      <div className="text-center my-2 w-56 mx-auto">
         <p>本日の業務予定時間</p>
         <p>
           {start.toFormat("HH:mm")}～{end.toFormat("HH:mm")} (
