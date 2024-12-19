@@ -12,7 +12,7 @@ import SaveOvertime from "@/components/saveOvertime";
 import TimePickerDialog from "@/components/timePickerDialog";
 import WorkTime from "@/components/workTime";
 import { convertHMin } from "@/utils/convertHMin";
-import { OVERTIME_KEY } from "@/utils/const";
+import { BREAK_TIME_KEY, OVERTIME_KEY } from "@/utils/const";
 import { twMerge } from "tailwind-merge";
 
 export default function Home() {
@@ -32,6 +32,15 @@ export default function Home() {
     second: 0,
     millisecond: 0,
   });
+  const breakTimeFromLocalStorage = localStorage.getItem(BREAK_TIME_KEY);
+  const lunchTime = breakTimeFromLocalStorage
+    ? DateTime.fromISO(breakTimeFromLocalStorage)
+    : DateTime.now().set({
+        hour: 12,
+        minute: 0,
+        second: 0,
+        millisecond: 0,
+      });
   // 時間の単位は min
   const [workTime, setWorkTime] = useState(defaultWorkTime);
   const [overtime, setOvertime] = useState(defaultThisMonthsOvertime);
@@ -60,39 +69,37 @@ export default function Home() {
     setIsTimePickerDialogVisible(true);
   }, []);
 
-  const totalWorkingTimeNow = () => {
-    const now = DateTime.now();
-    // デバッグ用
-    // const now = DateTime.now().set({ hour: 17, minute: 20 });
-    const lunch = DateTime.now().set({ hour: 12, minute: 0, second: 0 });
-    const diffLunch = now.diff(lunch, "minutes");
-    const diffLunchMin = diffLunch.get("minutes");
-    const diff = now.diff(start, "minutes");
-    let diffMin;
-    if (diffLunchMin < 0) {
-      diffMin = diff.get("minutes");
-    } else if (60 < diffLunchMin) {
-      diffMin = diff.get("minutes") - 60;
-    } else {
-      diffMin = diff.get("minutes") - diffLunchMin;
-    }
-    if (diffMin < 0) {
-      return 0;
-    }
-    return diffMin / workTime;
-  };
-
   useEffect(() => {
+    const totalWorkingTimeNow = () => {
+      const now = DateTime.now();
+      // デバッグ用
+      // const now = DateTime.now().set({ hour: 17, minute: 20 });
+      const lunch = DateTime.now().set({ hour: 12, minute: 0, second: 0 });
+      const diffLunch = now.diff(lunch, "minutes");
+      const diffLunchMin = diffLunch.get("minutes");
+      const diff = now.diff(start, "minutes");
+      let diffMin;
+      if (diffLunchMin < 0) {
+        diffMin = diff.get("minutes");
+      } else if (60 < diffLunchMin) {
+        diffMin = diff.get("minutes") - 60;
+      } else {
+        diffMin = diff.get("minutes") - diffLunchMin;
+      }
+      if (diffMin < 0) {
+        return 0;
+      }
+      return diffMin / workTime;
+    };
     const intervalId = setInterval(() => {
       setPercent(totalWorkingTimeNow());
       const now = DateTime.now();
-      const lunchTime = DateTime.now().set({ hour: 1 });
-      if (lunchTime < now && now < lunchTime) {
+      if (lunchTime < now && now < lunchTime.plus({ hour: 1 })) {
         setIsBreak(true);
       }
     }, 1000);
     return () => clearInterval(intervalId);
-  }, []);
+  }, [lunchTime, start, workTime]);
   const bgClassName = twMerge(
     "grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]",
     isBreak && "bg-[#FFEFD5]"
@@ -123,10 +130,28 @@ export default function Home() {
             }}
           />
           <p className="text-center">
-            今月の残り残業時間: {convertHMin(overtime)}
+            今月の残り残業時間:
+            <span
+              className={twMerge(
+                "font-bold",
+                overtime < 0 && "text-blue-400",
+                0 < overtime && "text-red-500"
+              )}
+            >
+              {convertHMin(overtime)}
+            </span>
           </p>
           <p className="text-center">
-            本日の残業時間: {convertHMin(TodaysOvertime)}
+            本日の残業時間:
+            <span
+              className={twMerge(
+                "font-bold",
+                TodaysOvertime < 0 && "text-blue-400",
+                0 < TodaysOvertime && "text-red-500"
+              )}
+            >
+              {convertHMin(TodaysOvertime)}
+            </span>
           </p>
           <p className="text-center">残業時間を調整</p>
           <Slider
