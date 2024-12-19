@@ -14,6 +14,8 @@ import WorkTime from "@/components/workTime";
 import { convertHMin } from "@/utils/convertHMin";
 import { BREAK_TIME_KEY, OVERTIME_KEY } from "@/utils/const";
 import { twMerge } from "tailwind-merge";
+import Button from "@/components/button";
+import SettingsIcon from "@mui/icons-material/Settings";
 
 export default function Home() {
   const defaultWorkTime = 7.5 * 60; // 7.5h
@@ -184,7 +186,16 @@ export default function Home() {
           />
         </div>
       </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center"></footer>
+      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
+        <Button
+          startIcon={<SettingsIcon />}
+          onClick={() => {
+            location.href = "../setting";
+          }}
+        >
+          設定
+        </Button>
+      </footer>
     </div>
   );
 }

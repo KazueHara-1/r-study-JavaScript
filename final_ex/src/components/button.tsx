@@ -6,6 +6,7 @@ interface ButtonProps {
   children: ReactNode;
   className?: string;
   onClick: () => void;
+  startIcon?: ReactNode;
 }
 
 const Button = ({
@@ -13,16 +14,19 @@ const Button = ({
   children,
   className,
   onClick,
+  startIcon,
 }: ButtonProps) => {
   const mergedClassName = twMerge(
     className,
     type === "normal" && "bg-blue-500",
     type === "submit" && "bg-green-600",
-    "text-white text-sm px-4 py-2 rounded-md border-none"
+    startIcon && "flex items-center",
+    "text-white text-sm px-4 py-2 rounded-md border-none gap-2"
   );
   return (
     <button className={mergedClassName} onClick={onClick}>
-      {children}
+      {startIcon}
+      <p>{children}</p>
     </button>
   );
 };
