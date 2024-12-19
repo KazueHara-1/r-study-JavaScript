@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Button from "@/components/button";
+import SaveSettingButton from "@/components/saveSettingButton";
 import { BREAK_TIME_KEY, OVERTIME_KEY } from "@/utils/const";
 import NumberInputBasic from "@/components/numberInput";
 import { LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
@@ -9,6 +9,7 @@ import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { DateTime } from "luxon";
 
 export default function Home() {
+  const [isSnackbarVisible, setIsSnackbarVisible] = useState(false);
   const [overtimeHours, setOvertimeHours] = useState(0);
   const [overtimeMinutes, setOvertimeMinutes] = useState(0);
   const [breakTime, setBreakTime] = useState(
@@ -82,9 +83,16 @@ export default function Home() {
           </LocalizationProvider>
           <span>から1時間</span>
         </div>
-        <Button className="mx-auto" type="submit" onClick={saveToLocalStorage}>
-          保存
-        </Button>
+        <SaveSettingButton
+          handleClose={() => {
+            setIsSnackbarVisible(false);
+          }}
+          isOpen={isSnackbarVisible}
+          onClick={() => {
+            saveToLocalStorage();
+            setIsSnackbarVisible(true);
+          }}
+        />
       </main>
       <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
         <a className="text-blue-600 underline" href="../working">
